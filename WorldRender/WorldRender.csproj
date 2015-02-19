@@ -65,6 +65,7 @@
     <Compile Include="Graphics\RasterizerState.cs" />
     <Compile Include="Graphics\RenderCommand.cs" />
     <Compile Include="Graphics\RenderTarget.cs" />
+    <Compile Include="Graphics\UniqueId.cs" />
     <Compile Include="Graphics\VertexBuffer.cs" />
     <Compile Include="Graphics\VertexShader.cs" />
     <Compile Include="Input\FormEventHandler.cs" />

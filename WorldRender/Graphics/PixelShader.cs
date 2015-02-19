@@ -6,6 +6,15 @@ namespace WorldRender.Graphics
     {
         private bool resourceOwner;
         private SlimDX.Direct3D11.PixelShader pixelShader;
+        private UniqueId<PixelShader> uniqueId;
+
+        internal int Id
+        {
+            get
+            {
+                return uniqueId.Id;
+            }
+        }
 
         internal PixelShader(SlimDX.Direct3D11.PixelShader pixelShader)
         {
@@ -18,6 +27,7 @@ namespace WorldRender.Graphics
 
             resourceOwner = false;
             this.pixelShader = pixelShader;
+            uniqueId = new UniqueId<PixelShader>();
         }
 
         internal PixelShader(SlimDX.Direct3D11.Device device, SlimDX.D3DCompiler.ShaderBytecode pixelShaderCode)
@@ -36,6 +46,7 @@ namespace WorldRender.Graphics
 
             resourceOwner = true;
             pixelShader = new SlimDX.Direct3D11.PixelShader(device, pixelShaderCode);
+            uniqueId = new UniqueId<PixelShader>();
         }
 
         internal PixelShader(SlimDX.Direct3D11.Device device, string shaderCode, string entryPoint, SlimDX.D3DCompiler.ShaderFlags shaderFlags)
@@ -68,6 +79,7 @@ namespace WorldRender.Graphics
 #endif
 
             resourceOwner = true;
+            uniqueId = new UniqueId<PixelShader>();
 
             using (var pixelShaderCode = SlimDX.D3DCompiler.ShaderBytecode.Compile(shaderCode, entryPoint, "ps_5_0", shaderFlags, SlimDX.D3DCompiler.EffectFlags.None))
             {

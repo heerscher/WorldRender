@@ -22,7 +22,7 @@ namespace WorldRender.Graphics
             }
         }
 
-        public VertexBuffer(SlimDX.Direct3D11.Device device, SlimDX.DataStream dataStream, int bytesPerVertex, int vertexCount)
+        internal VertexBuffer(SlimDX.Direct3D11.Device device, SlimDX.DataStream dataStream, int bytesPerVertex, int vertexCount)
             : this(device, dataStream, bytesPerVertex, vertexCount, SlimDX.Direct3D11.PrimitiveTopology.TriangleList)
         {
         }

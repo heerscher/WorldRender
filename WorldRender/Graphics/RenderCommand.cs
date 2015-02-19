@@ -3,12 +3,12 @@ using System.Collections.Generic;
 
 namespace WorldRender.Graphics
 {
-    public class RenderCommand
+    public class RenderCommand : IComparable<RenderCommand>
     {
         private RasterizerState rasterizerState;
         private RenderTarget renderTarget;
         private PixelShader pixelShader;
-        private long sortKey;
+        private UInt64 sortKey;
         private VertexBuffer vertexBuffer;
         private VertexShader vertexShader;
 
@@ -48,9 +48,15 @@ namespace WorldRender.Graphics
             this.rasterizerState = rasterizerState;
             this.renderTarget = renderTarget;
             this.pixelShader = pixelShader;
-            sortKey = 0L;
             this.vertexBuffer = vertexBuffer;
             this.vertexShader = vertexShader;
+
+            // Calculate sortkey
+            sortKey = 0UL;
+            sortKey += Convert.ToUInt64(renderTarget.Id) << 60;
+            sortKey += Convert.ToUInt64(vertexShader.Id) << 56;
+            sortKey += Convert.ToUInt64(pixelShader.Id) << 52;
+            sortKey += Convert.ToUInt64(rasterizerState.Id) << 48;
         }
 
         public void Render(Device device)
@@ -104,6 +110,11 @@ namespace WorldRender.Graphics
 
                 device.Context.DrawIndexed(IndexBuffer.Count, 0, 0);
             }
+        }
+
+        public int CompareTo(RenderCommand other)
+        {
+            return Convert.ToInt32(sortKey - other.sortKey);
         }
     }
 }

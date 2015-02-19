@@ -10,6 +10,15 @@ namespace WorldRender.Graphics
         private SlimDX.Direct3D11.InputLayout inputLayout;
         private bool resourceOwner;
         private SlimDX.Direct3D11.VertexShader vertexShader;
+        private UniqueId<VertexShader> uniqueId;
+
+        internal int Id
+        {
+            get
+            {
+                return uniqueId.Id;
+            }
+        }
 
         internal VertexShader(SlimDX.Direct3D11.InputLayout inputLayout, SlimDX.Direct3D11.VertexShader vertexShader)
         {
@@ -28,6 +37,7 @@ namespace WorldRender.Graphics
             this.inputLayout = inputLayout;
             resourceOwner = false;
             this.vertexShader = vertexShader;
+            uniqueId = new UniqueId<VertexShader>();
         }
 
         internal VertexShader(SlimDX.Direct3D11.Device device, IEnumerable<SlimDX.Direct3D11.InputElement> inputElements, SlimDX.D3DCompiler.ShaderBytecode vertexShaderCode)
@@ -52,6 +62,7 @@ namespace WorldRender.Graphics
             resourceOwner = true;
             vertexShader = new SlimDX.Direct3D11.VertexShader(device, vertexShaderCode);
             inputLayout = new SlimDX.Direct3D11.InputLayout(device, vertexShaderCode, inputElements.ToArray());
+            uniqueId = new UniqueId<VertexShader>();
         }
 
         internal VertexShader(SlimDX.Direct3D11.Device device, IEnumerable<SlimDX.Direct3D11.InputElement> inputElements, string shaderCode, string entryPoint, SlimDX.D3DCompiler.ShaderFlags shaderFlags)
@@ -89,7 +100,8 @@ namespace WorldRender.Graphics
 #endif
 
             resourceOwner = true;
-            
+            uniqueId = new UniqueId<VertexShader>();
+
             using (var vertexShaderCode = SlimDX.D3DCompiler.ShaderBytecode.Compile(shaderCode, entryPoint, "vs_5_0", shaderFlags, SlimDX.D3DCompiler.EffectFlags.None))
             {
                 vertexShader = new SlimDX.Direct3D11.VertexShader(device, vertexShaderCode);

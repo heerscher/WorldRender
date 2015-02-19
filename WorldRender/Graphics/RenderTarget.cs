@@ -6,6 +6,15 @@ namespace WorldRender.Graphics
     {
         private SlimDX.Direct3D11.RenderTargetView renderTargetView;
         private bool resourceOwner;
+        private UniqueId<RenderTarget> uniqueId;
+
+        internal int Id
+        {
+            get
+            {
+                return uniqueId.Id;
+            }
+        }
 
         internal RenderTarget(SlimDX.Direct3D11.RenderTargetView renderTargetView)
         {
@@ -18,6 +27,7 @@ namespace WorldRender.Graphics
 
             this.renderTargetView = renderTargetView;
             resourceOwner = false;
+            uniqueId = new UniqueId<RenderTarget>();
         }
 
         internal RenderTarget(SlimDX.Direct3D11.Device device, SlimDX.Direct3D11.Resource resource)
@@ -36,6 +46,7 @@ namespace WorldRender.Graphics
 
             renderTargetView = new SlimDX.Direct3D11.RenderTargetView(device, resource);
             resourceOwner = true;
+            uniqueId = new UniqueId<RenderTarget>();
         }
 
         internal void Render(SlimDX.Direct3D11.DeviceContext deviceContext)

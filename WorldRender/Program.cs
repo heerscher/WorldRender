@@ -21,7 +21,9 @@ namespace WorldRender
         [STAThread]
         internal static void Main()
         {
-            //MessageBox.Show("waiting");
+#if DEBUG
+            MessageBox.Show("Fire up RenderDoc if needed");
+#endif
 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
@@ -58,6 +60,7 @@ namespace WorldRender
                     matrix.View = SlimDX.Matrix.Transpose(camera.View);
                     cbuffer.Change(ref matrix);
 
+                    renderCommands.Sort();
                     device.Render(renderCommands);
                     System.Diagnostics.Debug.WriteLine("campos: " + camera.Position.ToString());
                 });
