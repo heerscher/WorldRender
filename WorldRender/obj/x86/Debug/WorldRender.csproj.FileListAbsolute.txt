@@ -1,0 +1,10 @@
+C:\Users\Heerscher\Desktop\WorldRender\WorldRender\obj\x86\Debug\WorldRender.Properties.Resources.resources
+C:\Users\Heerscher\Desktop\WorldRender\WorldRender\obj\x86\Debug\WorldRender.csproj.GenerateResource.Cache
+C:\Users\Heerscher\Desktop\WorldRender\WorldRender\bin\Debug\WorldRender.exe
+C:\Users\Heerscher\Desktop\WorldRender\WorldRender\bin\Debug\WorldRender.pdb
+C:\Users\Heerscher\Desktop\WorldRender\WorldRender\bin\Debug\AssimpNet.dll
+C:\Users\Heerscher\Desktop\WorldRender\WorldRender\bin\Debug\AssimpNet.xml
+C:\Users\Heerscher\Desktop\WorldRender\WorldRender\obj\x86\Debug\WorldRender.csprojResolveAssemblyReference.cache
+C:\Users\Heerscher\Desktop\WorldRender\WorldRender\obj\x86\Debug\WorldRender.exe
+C:\Users\Heerscher\Desktop\WorldRender\WorldRender\obj\x86\Debug\WorldRender.pdb
+C:\Users\Heerscher\Desktop\WorldRender\WorldRender\bin\Debug\SlimDX.dll
