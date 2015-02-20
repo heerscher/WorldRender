@@ -35,11 +35,11 @@ namespace WorldRender
                 var inputState = new Input.FormEventHandler(device.Form);
                 var renderCommands = new List<Graphics.RenderCommand>(32);
 
-
                 var matrix = new MatrixBuffer();
                 matrix.World = SlimDX.Matrix.Identity;
                 matrix.Projection = SlimDX.Matrix.Transpose(SlimDX.Matrix.PerspectiveFovLH((float)(Math.PI) / 4.0f, device.Form.Width / device.Form.Height, 0.1f, 100000.0f));
                 var camera = new Graphics.Camera();
+				var cameraController = new Input.CameraController(inputState, camera);
 
                 var cbuffer = AddTest(device, renderCommands);
 
@@ -47,15 +47,7 @@ namespace WorldRender
                 {
                     deltaTime = frameTime.Delta();
                     inputState.UpdateState();
-
-                    camera.MovingForwards = inputState.IsKeyDown(Keys.W);
-                    camera.MovingBackwards = inputState.IsKeyDown(Keys.S);
-                    camera.StrafingLeft = inputState.IsKeyDown(Keys.A);
-                    camera.StrafingRight = inputState.IsKeyDown(Keys.D);
-                    camera.Pitch = Convert.ToSingle(inputState.MouseDeltaY()) / 500.0f;
-                    camera.Angle = Convert.ToSingle(inputState.MouseDeltaX()) / 500.0f;
-
-                    camera.Update(deltaTime);
+                    cameraController.Update(deltaTime);
 
                     matrix.View = SlimDX.Matrix.Transpose(camera.View);
                     cbuffer.Change(ref matrix);
