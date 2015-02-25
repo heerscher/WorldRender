@@ -9,7 +9,7 @@ namespace WorldRender.Graphics
         {
         }
 
-        public void Change(ref T data)
+        public void Write(ref T data)
         {
             stream.Position = 0;
             stream.Write(data);

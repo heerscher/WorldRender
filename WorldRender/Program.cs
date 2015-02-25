@@ -63,11 +63,14 @@ namespace WorldRender
 
                     // TEST BELOW
                     matrix.View = SlimDX.Matrix.Transpose(camera.View);
-                    cbuffer.Change(ref matrix);
-                    // END TESt
+                    cbuffer.Write(ref matrix);
+                    // END TEST
 
                     renderCommands.Sort();
+
+                    device.Clear();
                     device.Render(renderCommands);
+                    device.Present();
                 });
             }
         }

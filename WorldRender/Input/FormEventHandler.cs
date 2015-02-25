@@ -12,10 +12,12 @@ namespace WorldRender.Input
 
         public FormEventHandler(System.Windows.Forms.Form form)
         {
+#if ASSERT
             if (form == null)
             {
                 throw new ArgumentNullException("form");
             }
+#endif
 
             this.form = form;
             keyState = new Dictionary<System.Windows.Forms.Keys, KeyState>();

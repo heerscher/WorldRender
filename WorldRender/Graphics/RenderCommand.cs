@@ -3,6 +3,9 @@ using System.Collections.Generic;
 
 namespace WorldRender.Graphics
 {
+    /// <summary>
+    /// A sortable batch of render calls.
+    /// </summary>
     public class RenderCommand : IComparable<RenderCommand>
     {
         private RasterizerState rasterizerState;

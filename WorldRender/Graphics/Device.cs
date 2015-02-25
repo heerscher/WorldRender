@@ -3,6 +3,9 @@ using System.Collections.Generic;
 
 namespace WorldRender.Graphics
 {
+    /// <summary>
+    /// Wraps the rendering API.
+    /// </summary>
     public class Device : IDisposable
     {
         private SlimDX.Color4 backgroundColor;
@@ -86,7 +89,12 @@ namespace WorldRender.Graphics
 
             using (var factory = swapChain.GetParent<SlimDX.DXGI.Factory>())
             {
-                factory.SetWindowAssociation(form.Handle, SlimDX.DXGI.WindowAssociationFlags.IgnoreAltEnter);
+                result = factory.SetWindowAssociation(form.Handle, SlimDX.DXGI.WindowAssociationFlags.IgnoreAltEnter);
+
+                if (result.IsFailure)
+                {
+                    throw new ApplicationException("Failed to associate window with DirectX device.");
+                }
             }
 
             viewport = new SlimDX.Direct3D11.Viewport(0.0f, 0.0f, Convert.ToSingle(form.ClientSize.Width), Convert.ToSingle(form.ClientSize.Height));
@@ -103,17 +111,20 @@ namespace WorldRender.Graphics
 
             form.UserResized += (sender, e) =>
             {
-                swapChain.ResizeBuffers(2, 0, 0, SlimDX.DXGI.Format.R8G8B8A8_UNorm, SlimDX.DXGI.SwapChainFlags.AllowModeSwitch);
+                var resizeResult = swapChain.ResizeBuffers(2, 0, 0, SlimDX.DXGI.Format.R8G8B8A8_UNorm, SlimDX.DXGI.SwapChainFlags.AllowModeSwitch);
 
-                using (var resource = SlimDX.Direct3D11.Resource.FromSwapChain<SlimDX.Direct3D11.Texture2D>(swapChain, 0))
+                if (resizeResult.IsSuccess)
                 {
-                    screenRenderTargetView.Dispose();
-                    screenRenderTargetView = new SlimDX.Direct3D11.RenderTargetView(device, resource);
+                    using (var resource = SlimDX.Direct3D11.Resource.FromSwapChain<SlimDX.Direct3D11.Texture2D>(swapChain, 0))
+                    {
+                        screenRenderTargetView.Dispose();
+                        screenRenderTargetView = new SlimDX.Direct3D11.RenderTargetView(device, resource);
+                    }
+
+                    viewport = new SlimDX.Direct3D11.Viewport(0.0f, 0.0f, Convert.ToSingle(form.ClientSize.Width), Convert.ToSingle(form.ClientSize.Height));
+
+                    deviceContext.Rasterizer.SetViewports(viewport);
                 }
-
-                viewport = new SlimDX.Direct3D11.Viewport(0.0f, 0.0f, Convert.ToSingle(form.ClientSize.Width), Convert.ToSingle(form.ClientSize.Height));
-
-                deviceContext.Rasterizer.SetViewports(viewport);
             };
         }
 
@@ -122,15 +133,31 @@ namespace WorldRender.Graphics
             return new RenderTarget(screenRenderTargetView);
         }
 
-        public void Render(IEnumerable<RenderCommand> renderCommands)
+        /// <summary>
+        /// Clears the backbuffer.
+        /// </summary>
+        public void Clear()
         {
             deviceContext.ClearRenderTargetView(screenRenderTargetView, backgroundColor);
+        }
 
+        /// <summary>
+        /// Renders a batch of render calls.
+        /// </summary>
+        /// <param name="renderCommands">One or more render commands containing render calls.</param>
+        public void Render(IEnumerable<RenderCommand> renderCommands)
+        {
             foreach (var renderCommand in renderCommands)
             {
                 renderCommand.Render(this);
             }
+        }
 
+        /// <summary>
+        /// Swaps the backbuffer and the frontbuffer.
+        /// </summary>
+        public void Present()
+        {
             swapChain.Present(0, SlimDX.DXGI.PresentFlags.None);
         }
 
