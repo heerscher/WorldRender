@@ -49,10 +49,12 @@ namespace WorldRender.Graphics
 
         public Device()
         {
+            // Default background color
             backgroundColor = new SlimDX.Color4(0.5f, 0.5f, 1.0f);
 
             form = new SlimDX.Windows.RenderForm()
             {
+                Text = "Game",
                 WindowState = System.Windows.Forms.FormWindowState.Maximized
             };
 

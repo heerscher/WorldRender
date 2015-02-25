@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Runtime.InteropServices;
 
 namespace WorldRender.Graphics
 {
@@ -43,17 +44,19 @@ namespace WorldRender.Graphics
 
             indexCount = indices.Count();
             resourceOwner = true;
+            var indexSize = Marshal.SizeOf(typeof(UInt32));
+            var bufferSize = indexCount * indexSize;
 
-            using (var dataStream = new SlimDX.DataStream(indexCount * 2, true, true))
+            using (var dataStream = new SlimDX.DataStream(bufferSize, true, true))
             {
                 foreach (var index in indices)
                 {
-                    dataStream.Write(Convert.ToUInt16(index));
+                    dataStream.Write(Convert.ToUInt32(index));
                 }
 
                 dataStream.Position = 0;
 
-                indexBuffer = new SlimDX.Direct3D11.Buffer(device, dataStream, 2 * indexCount, SlimDX.Direct3D11.ResourceUsage.Default, SlimDX.Direct3D11.BindFlags.IndexBuffer, SlimDX.Direct3D11.CpuAccessFlags.None, SlimDX.Direct3D11.ResourceOptionFlags.None, 0);
+                indexBuffer = new SlimDX.Direct3D11.Buffer(device, dataStream, bufferSize, SlimDX.Direct3D11.ResourceUsage.Default, SlimDX.Direct3D11.BindFlags.IndexBuffer, SlimDX.Direct3D11.CpuAccessFlags.None, SlimDX.Direct3D11.ResourceOptionFlags.None, 0);
             }           
         }
 
@@ -85,7 +88,7 @@ namespace WorldRender.Graphics
             }
 #endif
 
-            deviceContext.InputAssembler.SetIndexBuffer(indexBuffer, SlimDX.DXGI.Format.R16_UNorm, 0);
+            deviceContext.InputAssembler.SetIndexBuffer(indexBuffer, SlimDX.DXGI.Format.R32_UInt, 0);
         }
 
         public void Dispose()

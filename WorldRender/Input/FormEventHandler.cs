@@ -1,20 +1,31 @@
 ﻿using System.Collections.Generic;
+using System.Windows.Forms;
+using System;
 
 namespace WorldRender.Input
 {
     public class FormEventHandler : IState
     {
+        private Form form;
         private Dictionary<System.Windows.Forms.Keys, KeyState> keyState;
         private MouseState mouseState;
 
         public FormEventHandler(System.Windows.Forms.Form form)
         {
+            if (form == null)
+            {
+                throw new ArgumentNullException("form");
+            }
+
+            this.form = form;
             keyState = new Dictionary<System.Windows.Forms.Keys, KeyState>();
             mouseState = new MouseState();
 
             form.KeyDown += KeyDownEvent;
             form.KeyUp += KeyUpEvent;
-            form.MouseMove += MouseMoveEvent;
+            
+            // Put mouse in center of screen immediately, otherwise the first frame is way off
+            Cursor.Position = new System.Drawing.Point(form.Width / 2, form.Height / 2);
         }
 
         public bool IsKeyDown(System.Windows.Forms.Keys key)
@@ -61,19 +72,20 @@ namespace WorldRender.Input
                 }
             }
 
+            // Get mouse information
+            var oldPosition = Cursor.Position;
+            var newPosition = new System.Drawing.Point(form.Width / 2, form.Height / 2);
+
             // Update mouse delta
-            mouseState.DeltaX = mouseState.LastX - mouseState.X;
-            mouseState.DeltaY = mouseState.LastY - mouseState.Y;
+            mouseState.DeltaX = oldPosition.X - newPosition.X;
+            mouseState.DeltaY = oldPosition.Y - newPosition.Y;
 
             // Update current mouse coordinates
-            mouseState.X = mouseState.LastX;
-            mouseState.Y = mouseState.LastY;
-        }
+            mouseState.X += mouseState.DeltaX;
+            mouseState.Y += mouseState.DeltaY;
 
-        private void MouseMoveEvent(object sender, System.Windows.Forms.MouseEventArgs e)
-        {
-            mouseState.LastX = e.X;
-            mouseState.LastY = e.Y;
+            // Put mouse in center of screen
+            Cursor.Position = newPosition;
         }
 
         private void KeyDownEvent(object sender, System.Windows.Forms.KeyEventArgs e)
@@ -97,9 +109,12 @@ namespace WorldRender.Input
 
         private void KeyUpEvent(object sender, System.Windows.Forms.KeyEventArgs e)
         {
-            var state = keyState[e.KeyCode];
+            if (keyState.ContainsKey(e.KeyCode))
+            {
+                var state = keyState[e.KeyCode];
 
-            state.Down = false;
+                state.Down = false;
+            }
         }
     }
 }

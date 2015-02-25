@@ -8,3 +8,4 @@ C:\Users\Heerscher\Desktop\WorldRender\WorldRender\obj\x86\Debug\WorldRender.csp
 C:\Users\Heerscher\Desktop\WorldRender\WorldRender\obj\x86\Debug\WorldRender.exe
 C:\Users\Heerscher\Desktop\WorldRender\WorldRender\obj\x86\Debug\WorldRender.pdb
 C:\Users\Heerscher\Desktop\WorldRender\WorldRender\bin\Debug\SlimDX.dll
+C:\Users\Heerscher\Desktop\WorldRender\WorldRender\bin\Debug\simplecube.DAE

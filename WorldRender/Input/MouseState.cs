@@ -7,7 +7,5 @@ namespace WorldRender.Input
         public int Y;
         public int DeltaX;
         public int DeltaY;
-        public int LastX;
-        public int LastY;
     }
 }

@@ -68,6 +68,7 @@
     <Compile Include="Graphics\UniqueId.cs" />
     <Compile Include="Graphics\VertexBuffer.cs" />
     <Compile Include="Graphics\VertexShader.cs" />
+    <Compile Include="Input\CameraController.cs" />
     <Compile Include="Input\FormEventHandler.cs" />
     <Compile Include="Input\IState.cs" />
     <Compile Include="Input\KeyState.cs" />
@@ -94,6 +95,9 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <Content Include="simplecube.DAE">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\AssimpNet.3.3.1\build\AssimpNet.targets" Condition="Exists('..\packages\AssimpNet.3.3.1\build\AssimpNet.targets')" />

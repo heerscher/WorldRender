@@ -9,7 +9,6 @@ namespace WorldRender.Graphics
         private SlimDX.Vector3 up;
 
         private float speed;
-        private float sensitivity;
 
         public SlimDX.Matrix View;
 
@@ -23,12 +22,11 @@ namespace WorldRender.Graphics
 
         public Camera()
         {
-            Position = new SlimDX.Vector3(0.0f, 10.0f, 0.0f);
+            Position = new SlimDX.Vector3(0.0f, 0.0f, -5.0f);
             right = new SlimDX.Vector3(1.0f, 0.0f, 0.0f);
             up = new SlimDX.Vector3(0.0f, 1.0f, 0.0f);
             forward = new SlimDX.Vector3(0.0f, 0.0f, 1.0f);
-            speed = 250.0f;
-            sensitivity = 500.0f;
+            speed = 2.0f;
             View = SlimDX.Matrix.Identity;
         }
 
