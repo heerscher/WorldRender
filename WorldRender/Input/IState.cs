@@ -6,6 +6,9 @@ namespace WorldRender.Input
         bool IsKeyDown(System.Windows.Forms.Keys key);
         bool IsKeyPressed(System.Windows.Forms.Keys key);
 
+        bool IsMouseButtonDown(System.Windows.Forms.MouseButtons mouseButton);
+        bool IsMouseButtonPressed(System.Windows.Forms.MouseButtons mouseButton);
+
         int MouseX();
         int MouseY();
 
@@ -13,5 +16,7 @@ namespace WorldRender.Input
         int MouseDeltaY();
 
         void UpdateState();
+
+        Command Register(string name);
     }
 }

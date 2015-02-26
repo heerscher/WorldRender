@@ -1,13 +1,14 @@
-﻿using System.Collections.Generic;
-using System.Windows.Forms;
-using System;
+﻿using System;
+using System.Collections.Generic;
 
 namespace WorldRender.Input
 {
     public class FormEventHandler : IState
     {
-        private Form form;
+        private CommandCollection commandCollection;
+        private System.Windows.Forms.Form form;
         private Dictionary<System.Windows.Forms.Keys, KeyState> keyState;
+        private Dictionary<System.Windows.Forms.MouseButtons, MouseButtonState> mouseButtonState;
         private MouseState mouseState;
 
         public FormEventHandler(System.Windows.Forms.Form form)
@@ -19,15 +20,36 @@ namespace WorldRender.Input
             }
 #endif
 
+            commandCollection = new CommandCollection();
             this.form = form;
             keyState = new Dictionary<System.Windows.Forms.Keys, KeyState>();
+            mouseButtonState = new Dictionary<System.Windows.Forms.MouseButtons, MouseButtonState>();
             mouseState = new MouseState();
 
             form.KeyDown += KeyDownEvent;
             form.KeyUp += KeyUpEvent;
-            
+            form.MouseDown += MouseButtonDownEvent;
+            form.MouseUp += MouseButtonUpEvent;
+
             // Put mouse in center of screen immediately, otherwise the first frame is way off
-            Cursor.Position = new System.Drawing.Point(form.Width / 2, form.Height / 2);
+            System.Windows.Forms.Cursor.Position = new System.Drawing.Point(form.Width / 2, form.Height / 2);
+        }
+
+        public Command Register(string name)
+        {
+#if ASSERT
+            if (name == null)
+            {
+                throw new ArgumentNullException("name");
+            }
+
+            if (name.Length == 0)
+            {
+                throw new ArgumentOutOfRangeException("name");
+            }
+#endif
+
+            return commandCollection.Register(name);
         }
 
         public bool IsKeyDown(System.Windows.Forms.Keys key)
@@ -38,6 +60,16 @@ namespace WorldRender.Input
         public bool IsKeyPressed(System.Windows.Forms.Keys key)
         {
             return keyState.ContainsKey(key) && keyState[key].Pressed;
+        }
+
+        public bool IsMouseButtonDown(System.Windows.Forms.MouseButtons mouseButton)
+        {
+            return mouseButtonState.ContainsKey(mouseButton) && mouseButtonState[mouseButton].Down;
+        }
+
+        public bool IsMouseButtonPressed(System.Windows.Forms.MouseButtons mouseButton)
+        {
+            return mouseButtonState.ContainsKey(mouseButton) && mouseButtonState[mouseButton].Pressed;
         }
 
         public int MouseX()
@@ -74,8 +106,20 @@ namespace WorldRender.Input
                 }
             }
 
+            // Update mouse button state
+            foreach (var mb in mouseButtonState)
+            {
+                var state = mb.Value;
+
+                if (state.PressedFlag)
+                {
+                    state.Pressed = true;
+                    state.PressedFlag = false;
+                }
+            }
+
             // Get mouse information
-            var oldPosition = Cursor.Position;
+            var oldPosition = System.Windows.Forms.Cursor.Position;
             var newPosition = new System.Drawing.Point(form.Width / 2, form.Height / 2);
 
             // Update mouse delta
@@ -87,7 +131,10 @@ namespace WorldRender.Input
             mouseState.Y += mouseState.DeltaY;
 
             // Put mouse in center of screen
-            Cursor.Position = newPosition;
+            System.Windows.Forms.Cursor.Position = newPosition;
+
+            // Update the binding information
+            commandCollection.Update(this);
         }
 
         private void KeyDownEvent(object sender, System.Windows.Forms.KeyEventArgs e)
@@ -114,6 +161,35 @@ namespace WorldRender.Input
             if (keyState.ContainsKey(e.KeyCode))
             {
                 var state = keyState[e.KeyCode];
+
+                state.Down = false;
+            }
+        }
+
+        private void MouseButtonDownEvent(object sender, System.Windows.Forms.MouseEventArgs e)
+        {
+            if (mouseButtonState.ContainsKey(e.Button))
+            {
+                var state = mouseButtonState[e.Button];
+
+                state.Down = true;
+                state.PressedFlag = true;
+            }
+            else
+            {
+                mouseButtonState.Add(e.Button, new MouseButtonState()
+                {
+                    Down = true,
+                    PressedFlag = true
+                });
+            }
+        }
+
+        private void MouseButtonUpEvent(object sender, System.Windows.Forms.MouseEventArgs e)
+        {
+            if (mouseButtonState.ContainsKey(e.Button))
+            {
+                var state = mouseButtonState[e.Button];
 
                 state.Down = false;
             }

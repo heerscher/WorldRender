@@ -36,6 +36,12 @@ namespace WorldRender
                 var inputState = new Input.FormEventHandler(device.Form);
                 var renderCommands = new List<Graphics.RenderCommand>(32);
 
+                // KEY BINDING TEST
+                inputState.Register("moveForward").PrimaryBinding = new Input.KeyBinding(Keys.W);
+                inputState.Register("moveBackward").PrimaryBinding = new Input.KeyBinding(Keys.S);
+                inputState.Register("strafeLeft").PrimaryBinding = new Input.KeyBinding(Keys.A);
+                inputState.Register("strafeRight").PrimaryBinding = new Input.KeyBinding(Keys.D);
+                // END TEST
 
                 // TEST CODE
                 var matrix = new MatrixBuffer();

@@ -69,9 +69,15 @@
     <Compile Include="Graphics\VertexBuffer.cs" />
     <Compile Include="Graphics\VertexShader.cs" />
     <Compile Include="Input\CameraController.cs" />
+    <Compile Include="Input\Command.cs" />
+    <Compile Include="Input\CommandCollection.cs" />
     <Compile Include="Input\FormEventHandler.cs" />
+    <Compile Include="Input\IBinding.cs" />
     <Compile Include="Input\IState.cs" />
+    <Compile Include="Input\KeyBinding.cs" />
     <Compile Include="Input\KeyState.cs" />
+    <Compile Include="Input\MouseBinding.cs" />
+    <Compile Include="Input\MouseButtonState.cs" />
     <Compile Include="Input\MouseState.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
