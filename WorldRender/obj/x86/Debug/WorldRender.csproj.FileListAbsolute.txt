@@ -9,3 +9,7 @@ C:\Users\Heerscher\Desktop\WorldRender\WorldRender\obj\x86\Debug\WorldRender.exe
 C:\Users\Heerscher\Desktop\WorldRender\WorldRender\obj\x86\Debug\WorldRender.pdb
 C:\Users\Heerscher\Desktop\WorldRender\WorldRender\bin\Debug\SlimDX.dll
 C:\Users\Heerscher\Desktop\WorldRender\WorldRender\bin\Debug\simplecube.DAE
+C:\Users\Heerscher\Desktop\WorldRender\WorldRender\bin\Debug\Newtonsoft.Json.dll
+C:\Users\Heerscher\Desktop\WorldRender\WorldRender\bin\Debug\Newtonsoft.Json.xml
+C:\Users\Heerscher\Desktop\WorldRender\WorldRender\bin\Debug\shader.ps
+C:\Users\Heerscher\Desktop\WorldRender\WorldRender\bin\Debug\shader.vs
