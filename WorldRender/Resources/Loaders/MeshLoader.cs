@@ -7,6 +7,7 @@ namespace WorldRender.Resources.Loaders
     public class MeshLoader : Loader
     {
         private Graphics.Device device;
+        private IEnumerable<Type> supportedTypes;
 
         public MeshLoader(Graphics.Device device)
         {
@@ -18,6 +19,20 @@ namespace WorldRender.Resources.Loaders
 #endif
 
             this.device = device;
+
+            supportedTypes = new Type[]
+            {
+                typeof(Graphics.Mesh),
+                typeof(Graphics.MeshGroup)
+            };
+        }
+
+        public override IEnumerable<Type> SupportedTypes
+        {
+            get
+            {
+                return supportedTypes;
+            }
         }
 
         public override IDisposable Load(Type resourceType, string identifier)
@@ -25,6 +40,7 @@ namespace WorldRender.Resources.Loaders
             using (var assimpContext = new Assimp.AssimpContext())
             {
                 var scene = assimpContext.ImportFile(identifier);
+                var meshes = new List<Graphics.Mesh>();
 
                 foreach (var mesh in scene.Meshes)
                 {
@@ -62,11 +78,27 @@ namespace WorldRender.Resources.Loaders
                             return new Graphics.Mesh(vertexBuffer, indexBuffer);
                         }
 
-                        return new Graphics.Mesh(vertexBuffer);
+                        var result = new Graphics.Mesh(vertexBuffer);
+
+                        if (resourceType.Equals(typeof(Graphics.Mesh)))
+                        {
+                            return result;
+                        }
+                        else
+                        {
+                            meshes.Add(result);
+                        }
                     }
                 }
 
-                throw new KeyNotFoundException("Failed to load mesh: " + identifier);
+                if (meshes.Count > 0)
+                {
+                    return new Graphics.MeshGroup(meshes);
+                }
+                else
+                {
+                    throw new KeyNotFoundException("Failed to load mesh: " + identifier);
+                }
             }
         }
     }

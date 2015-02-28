@@ -29,23 +29,21 @@ namespace WorldRender.Resources
             resources.Clear();
         }
 
-        public void RegisterLoader(Type resourceType, Loader resourceLoader)
+        public void RegisterLoader(Loader resourceLoader)
         {
 #if ASSERT
-            if (resourceType == null)
-            {
-                throw new ArgumentNullException("resourceType");
-            }
-
             if (resourceLoader == null)
             {
                 throw new ArgumentNullException("resourceLoader");
             }
 #endif
 
-            if (!loaders.ContainsKey(resourceType))
+            foreach (var resourceType in resourceLoader.SupportedTypes)
             {
-                loaders.Add(resourceType, resourceLoader);
+                if (!loaders.ContainsKey(resourceType))
+                {
+                    loaders.Add(resourceType, resourceLoader);
+                }
             }
         }
 

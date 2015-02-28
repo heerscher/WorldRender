@@ -8,5 +8,6 @@ namespace WorldRender.Resources
     public abstract class Loader
     {
         public abstract IDisposable Load(Type resourceType, string identifier);
+        public abstract IEnumerable<Type> SupportedTypes { get; }
     }
 }

@@ -38,9 +38,9 @@ namespace WorldRender
                 var renderCommands = new List<Graphics.RenderCommand>(32);
 
                 // Map resource loaders to specific types
-                resourceCache.RegisterLoader(typeof(Graphics.Mesh), new Resources.Loaders.MeshLoader(device));
-                resourceCache.RegisterLoader(typeof(Graphics.VertexShader), new Resources.Loaders.VertexShaderLoader(device));
-                resourceCache.RegisterLoader(typeof(Graphics.PixelShader), new Resources.Loaders.PixelShaderLoader(device));
+                resourceCache.RegisterLoader(new Resources.Loaders.MeshLoader(device));
+                resourceCache.RegisterLoader(new Resources.Loaders.VertexShaderLoader(device));
+                resourceCache.RegisterLoader(new Resources.Loaders.PixelShaderLoader(device));
 
 
                 // KEY BINDING TEST
