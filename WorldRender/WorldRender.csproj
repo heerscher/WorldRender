@@ -65,6 +65,7 @@
     <Compile Include="Graphics\Device.cs" />
     <Compile Include="Graphics\IndexBuffer.cs" />
     <Compile Include="Graphics\Mesh.cs" />
+    <Compile Include="Graphics\MeshGroup.cs" />
     <Compile Include="Graphics\PixelShader.cs" />
     <Compile Include="Graphics\RasterizerState.cs" />
     <Compile Include="Graphics\RenderCommand.cs" />

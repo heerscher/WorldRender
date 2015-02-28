@@ -39,7 +39,7 @@ namespace WorldRender.Graphics
 
             if (!dataType.IsLayoutSequential || !dataType.IsValueType)
             {
-                throw new NotSupportedException("dataType must be a struct with a sequential layout => [StructLayout(LayoutKind.Sequential, Pack = 16)].");
+                throw new NotSupportedException("dataType must be a struct with a sequential layout. Use [StructLayout(LayoutKind.Sequential, Pack = 16)].");
             }
 #endif
 
