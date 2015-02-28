@@ -103,6 +103,7 @@ namespace WorldRender
             test.VertexConstantBuffers = cbuffers;
 
             test.IndexBuffer = simplecubemesh.IndexBuffer;
+            test.Texture = cache.Get<Graphics.Texture>("uv_map_reference.jpg");
 
             renderCommands.Add(test);
 

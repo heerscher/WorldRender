@@ -12,8 +12,22 @@ namespace WorldRender.Graphics
         private RenderTarget renderTarget;
         private PixelShader pixelShader;
         private UInt64 sortKey;
+        private Texture texture;
         private VertexBuffer vertexBuffer;
         private VertexShader vertexShader;
+
+        public Texture Texture
+        {
+            get
+            {
+                return texture;
+            }
+            set
+            {
+                texture = value;
+                UpdateSortKey();
+            }
+        }
 
         public IndexBuffer IndexBuffer { get; set; }
         public IEnumerable<ConstantBuffer> PixelConstantBuffers { get; set; }
@@ -54,12 +68,22 @@ namespace WorldRender.Graphics
             this.vertexBuffer = vertexBuffer;
             this.vertexShader = vertexShader;
 
+            UpdateSortKey();
+        }
+
+        private void UpdateSortKey()
+        {
             // Calculate sortkey
             sortKey = 0UL;
             sortKey += Convert.ToUInt64(renderTarget.Id) << 60;
             sortKey += Convert.ToUInt64(vertexShader.Id) << 56;
             sortKey += Convert.ToUInt64(pixelShader.Id) << 52;
             sortKey += Convert.ToUInt64(rasterizerState.Id) << 48;
+
+            if (texture != null)
+            {
+                sortKey += Convert.ToUInt64(texture.Id) << 44;
+            }
         }
 
         public void Render(Device device)
@@ -98,6 +122,11 @@ namespace WorldRender.Graphics
 
                     ++slot;
                 }
+            }
+
+            if (texture != null)
+            {
+                texture.Render(device.Context);
             }
 
             rasterizerState.Render(device.Context);

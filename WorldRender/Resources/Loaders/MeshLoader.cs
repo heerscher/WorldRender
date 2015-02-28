@@ -51,6 +51,11 @@ namespace WorldRender.Resources.Loaders
                         bytesPerVertex += 12;
                     }
 
+                    if (mesh.HasTextureCoords(0))
+                    {
+                        bytesPerVertex += 8;
+                    }
+
                     var vertexCount = mesh.VertexCount;
                     var meshSizeInBytes = vertexCount * bytesPerVertex;
 
@@ -65,7 +70,11 @@ namespace WorldRender.Resources.Loaders
                                 stream.Write(mesh.Normals[i]);
                             }
 
-                            //dataStream.Write(sourceMesh.TextureCoordinateChannels[0][i]);
+                            if (mesh.HasTextureCoords(0))
+                            {
+                                stream.Write(mesh.TextureCoordinateChannels[0][i].X);
+                                stream.Write(mesh.TextureCoordinateChannels[0][i].Y);
+                            }
                         }
 
                         var vertexBuffer = new Graphics.VertexBuffer(device.Handle, stream, bytesPerVertex, vertexCount, SlimDX.Direct3D11.PrimitiveTopology.TriangleList);

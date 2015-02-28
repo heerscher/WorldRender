@@ -1,8 +1,12 @@
 ﻿
+Texture2D shaderTexture;
+SamplerState SampleType;
+
 struct PixelInput
 {
     float4 position : SV_POSITION;
     float4 normal : NORMAL;
+	float2 texCoord : TEXCOORD0;
 };
 
 float4 PShader(PixelInput input) : SV_TARGET
@@ -15,7 +19,7 @@ float4 PShader(PixelInput input) : SV_TARGET
     float4 lightColor = float4(1.0f, 0.9f, 0.2f, 1.0f);
 	color += saturate(lightColor * lightIntensity);
 	
-	float4 diffuseColor = float4(0.1f, 0.7f, 0.1f, 1.0f);
+	float4 diffuseColor = shaderTexture.Sample(SampleType, input.texCoord);
 	color *= diffuseColor;
 
 	return color;

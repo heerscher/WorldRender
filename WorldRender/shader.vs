@@ -10,12 +10,14 @@ struct VertexInput
 {
 	float3 position : POSITION;
     float3 normal : NORMAL;
+	float2 texCoord : TEXCOORD0;
 };
 
 struct VertexOutput
 {
     float4 position : SV_POSITION;
     float4 normal : NORMAL;
+	float2 texCoord : TEXCOORD0;
 };
 
 VertexOutput VShader(VertexInput input)
@@ -27,6 +29,7 @@ VertexOutput VShader(VertexInput input)
 	output.position = mul(output.position, viewMatrix);
 	output.position = mul(output.position, projectionMatrix);
     output.normal = float4(input.normal, 1.0f);
+	output.texCoord = input.texCoord;
     
 	return output;
 }
