@@ -31,60 +31,57 @@ namespace WorldRender
 
             using (var device = new Graphics.Device())
             {
-                var deltaTime = 0.0f;
-                var frameTime = new Timing.Timer();
-                var inputState = new Input.FormEventHandler(device.Form);
-                var resourceCache = new Resources.Cache();
-                var renderCommands = new List<Graphics.RenderCommand>(32);
-
-                // Map resource loaders to specific types
-                resourceCache.RegisterLoader(new Resources.Loaders.MeshLoader(device));
-                resourceCache.RegisterLoader(new Resources.Loaders.VertexShaderLoader(device));
-                resourceCache.RegisterLoader(new Resources.Loaders.PixelShaderLoader(device));
-
-
-                // KEY BINDING TEST
-                // TODO: this should come from some config file
-                inputState.Register("moveForward").PrimaryBinding = new Input.KeyBinding(Keys.W);
-                inputState.Register("moveBackward").PrimaryBinding = new Input.KeyBinding(Keys.S);
-                inputState.Register("strafeLeft").PrimaryBinding = new Input.KeyBinding(Keys.A);
-                inputState.Register("strafeRight").PrimaryBinding = new Input.KeyBinding(Keys.D);
-                // END TEST
-
-
-                // TEST CODE
-                var matrix = new MatrixBuffer();
-                var camera = new Graphics.Camera();
-                var cameraController = new Input.CameraController(inputState, camera);
-
-                var cbuffer = AddTest(device, resourceCache, renderCommands);
-
-                float fieldOfView = Convert.ToSingle(Math.PI) / 4.0f;
-                float aspectRatio = Convert.ToSingle(device.Form.Width) / Convert.ToSingle(device.Form.Height);
-                float near = 0.1f;
-                float far = 1000.0f;
-                matrix.World = SlimDX.Matrix.Transpose(SlimDX.Matrix.Identity);
-                matrix.Projection = SlimDX.Matrix.Transpose(SlimDX.Matrix.PerspectiveFovLH(fieldOfView, aspectRatio, near, far));
-                // END TEST
-
-
-                SlimDX.Windows.MessagePump.Run(device.Form, () =>
+                using (var resourceCache = device.CreateResourceCache())
                 {
-                    deltaTime = frameTime.Delta();
-                    inputState.UpdateState();
-                    cameraController.Update(deltaTime);
+                    var deltaTime = 0.0f;
+                    var frameTime = new Timing.Timer();
+                    var inputState = new Input.FormEventHandler(device.Form);
+                    var renderCommands = new List<Graphics.RenderCommand>(32);
 
-                    // TEST BELOW
-                    matrix.View = SlimDX.Matrix.Transpose(camera.View);
-                    cbuffer.Write(ref matrix);
+
+                    // KEY BINDING TEST
+                    // TODO: this should come from some config file
+                    inputState.Register("moveForward").PrimaryBinding = new Input.KeyBinding(Keys.W);
+                    inputState.Register("moveBackward").PrimaryBinding = new Input.KeyBinding(Keys.S);
+                    inputState.Register("strafeLeft").PrimaryBinding = new Input.KeyBinding(Keys.A);
+                    inputState.Register("strafeRight").PrimaryBinding = new Input.KeyBinding(Keys.D);
                     // END TEST
 
-                    renderCommands.Sort();
 
-                    device.Clear();
-                    device.Render(renderCommands);
-                    device.Present();
-                });
+                    // TEST CODE
+                    var matrix = new MatrixBuffer();
+                    var camera = new Graphics.Camera();
+                    var cameraController = new Input.CameraController(inputState, camera);
+
+                    var cbuffer = AddTest(device, resourceCache, renderCommands);
+
+                    float fieldOfView = Convert.ToSingle(Math.PI) / 4.0f;
+                    float aspectRatio = Convert.ToSingle(device.Form.Width) / Convert.ToSingle(device.Form.Height);
+                    float near = 0.1f;
+                    float far = 1000.0f;
+                    matrix.World = SlimDX.Matrix.Transpose(SlimDX.Matrix.Identity);
+                    matrix.Projection = SlimDX.Matrix.Transpose(SlimDX.Matrix.PerspectiveFovLH(fieldOfView, aspectRatio, near, far));
+                    // END TEST
+
+
+                    SlimDX.Windows.MessagePump.Run(device.Form, () =>
+                    {
+                        deltaTime = frameTime.Delta();
+                        inputState.UpdateState();
+                        cameraController.Update(deltaTime);
+
+                        // TEST BELOW
+                        matrix.View = SlimDX.Matrix.Transpose(camera.View);
+                        cbuffer.Write(ref matrix);
+                        // END TEST
+
+                        renderCommands.Sort();
+
+                        device.Clear();
+                        device.Render(renderCommands);
+                        device.Present();
+                    });
+                }
             }
         }
 

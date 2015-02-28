@@ -134,6 +134,14 @@ namespace WorldRender.Graphics
         }
 
         /// <summary>
+        /// Creates a new resource cache which can be used to access resources associated with this device.
+        /// </summary>
+        public Resources.Cache CreateResourceCache()
+        {
+            return new Resources.Cache(this);
+        }
+
+        /// <summary>
         /// Clears the backbuffer.
         /// </summary>
         public void Clear()

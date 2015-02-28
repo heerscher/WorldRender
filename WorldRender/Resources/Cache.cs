@@ -5,15 +5,27 @@ using System.Text;
 
 namespace WorldRender.Resources
 {
-    public class Cache
+    public class Cache : IDisposable
     {
         private Dictionary<Type, Loader> loaders;
         private Dictionary<string, IDisposable> resources;
 
-        public Cache()
+        public Cache(Graphics.Device device)
         {
+#if ASSERT
+            if (device == null)
+            {
+                throw new ArgumentNullException("device");
+            }
+#endif
+
             loaders = new Dictionary<Type, Loader>();
             resources = new Dictionary<string, IDisposable>(StringComparer.OrdinalIgnoreCase);
+
+            // Map resource loaders to specific types
+            RegisterLoader(new Resources.Loaders.MeshLoader(device));
+            RegisterLoader(new Resources.Loaders.VertexShaderLoader(device));
+            RegisterLoader(new Resources.Loaders.PixelShaderLoader(device));
         }
 
         /// <summary>
@@ -84,6 +96,13 @@ namespace WorldRender.Resources
 
                 return (TResource)resource;
             }
+        }
+
+        public void Dispose()
+        {
+            Unload();
+
+            loaders.Clear();
         }
     }
 }
