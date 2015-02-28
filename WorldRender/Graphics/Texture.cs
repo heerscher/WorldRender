@@ -7,8 +7,8 @@ namespace WorldRender.Graphics
 {
     public class Texture : IDisposable
     {
-        SlimDX.Direct3D11.Texture2D texture2d;
-        SlimDX.Direct3D11.ShaderResourceView shaderResourceView;
+        private SlimDX.Direct3D11.Texture2D texture2d;
+        private SlimDX.Direct3D11.ShaderResourceView shaderResourceView;
         private UniqueId<Texture> uniqueId;
 
         internal int Id
