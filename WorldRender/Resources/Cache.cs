@@ -27,6 +27,7 @@ namespace WorldRender.Resources
             RegisterLoader(new Resources.Loaders.VertexShaderLoader(device));
             RegisterLoader(new Resources.Loaders.PixelShaderLoader(device));
             RegisterLoader(new Resources.Loaders.TextureLoader(device));
+            RegisterLoader(new Resources.Loaders.RasterizerStateLoader(device));
         }
 
         /// <summary>

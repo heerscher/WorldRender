@@ -14,3 +14,4 @@ C:\Users\Heerscher\Desktop\WorldRender\WorldRender\bin\Debug\Newtonsoft.Json.xml
 C:\Users\Heerscher\Desktop\WorldRender\WorldRender\bin\Debug\shader.ps
 C:\Users\Heerscher\Desktop\WorldRender\WorldRender\bin\Debug\shader.vs
 C:\Users\Heerscher\Desktop\WorldRender\WorldRender\bin\Debug\uv_map_reference.jpg
+C:\Users\Heerscher\Desktop\WorldRender\WorldRender\bin\Debug\texteffect.fx

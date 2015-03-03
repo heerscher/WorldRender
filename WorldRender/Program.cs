@@ -5,14 +5,6 @@ using System.Windows.Forms;
 
 namespace WorldRender
 {
-    [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Sequential, Pack = 16)]
-    struct MatrixBuffer
-    {
-        public SlimDX.Matrix World;
-        public SlimDX.Matrix View;
-        public SlimDX.Matrix Projection;
-    }
-
     internal static class Program
     {
         /// <summary>
@@ -36,7 +28,14 @@ namespace WorldRender
                     var deltaTime = 0.0f;
                     var frameTime = new Timing.Timer();
                     var inputState = new Input.FormEventHandler(device.Form);
-                    var renderCommands = new List<Graphics.RenderCommand>(32);
+                    var entities = new Entities.EntityCollection();
+                    var fieldOfView = Convert.ToSingle(Math.PI) / 4.0f;
+                    var aspectRatio = Convert.ToSingle(device.Form.Width) / Convert.ToSingle(device.Form.Height);
+                    var near = 0.1f;
+                    var far = 1000.0f;
+                    var projection = SlimDX.Matrix.Transpose(SlimDX.Matrix.PerspectiveFovLH(fieldOfView, aspectRatio, near, far));
+                    var camera = new Graphics.Camera();
+                    var cameraController = new Input.CameraController(inputState, camera);
 
 
                     // KEY BINDING TEST
@@ -48,20 +47,7 @@ namespace WorldRender
                     // END TEST
 
 
-                    // TEST CODE
-                    var matrix = new MatrixBuffer();
-                    var camera = new Graphics.Camera();
-                    var cameraController = new Input.CameraController(inputState, camera);
-
-                    var cbuffer = AddTest(device, resourceCache, renderCommands);
-
-                    float fieldOfView = Convert.ToSingle(Math.PI) / 4.0f;
-                    float aspectRatio = Convert.ToSingle(device.Form.Width) / Convert.ToSingle(device.Form.Height);
-                    float near = 0.1f;
-                    float far = 1000.0f;
-                    matrix.World = SlimDX.Matrix.Transpose(SlimDX.Matrix.Identity);
-                    matrix.Projection = SlimDX.Matrix.Transpose(SlimDX.Matrix.PerspectiveFovLH(fieldOfView, aspectRatio, near, far));
-                    // END TEST
+                    var testEntity = CreateTestEntity(device, resourceCache, entities);
 
 
                     SlimDX.Windows.MessagePump.Run(device.Form, () =>
@@ -70,15 +56,11 @@ namespace WorldRender
                         inputState.UpdateState();
                         cameraController.Update(deltaTime);
 
-                        // TEST BELOW
-                        matrix.View = SlimDX.Matrix.Transpose(camera.View);
-                        cbuffer.Write(ref matrix);
-                        // END TEST
-
-                        renderCommands.Sort();
+                        var view = SlimDX.Matrix.Transpose(camera.View);
 
                         device.Clear();
-                        device.Render(renderCommands);
+                        device.Render(entities.Render(ref view, ref projection));
+
                         device.Present();
                     });
                 }
@@ -86,28 +68,23 @@ namespace WorldRender
         }
 
 
-        private static Graphics.ConstantBuffer<MatrixBuffer> AddTest(Graphics.Device device, Resources.Cache cache, List<Graphics.RenderCommand> renderCommands)
+        private static Entities.Entity CreateTestEntity(Graphics.Device device, Resources.Cache cache, Entities.EntityCollection entities)
         {
+            var entity = entities.CreateEntity();
+            var renderComponent = entity.AddComponent<Entities.Components.RenderComponent>();
+
             var renderTarget = device.CreateScreenRenderTarget();
-            var rasterizerState = new Graphics.RasterizerState(device.Handle, SlimDX.Direct3D11.CullMode.Back, SlimDX.Direct3D11.FillMode.Solid);
+            var rasterizerState = cache.Get<Graphics.RasterizerState>("default");
 
             var vertexShader = cache.Get<Graphics.VertexShader>("shader.vs");
             var pixelShader = cache.Get<Graphics.PixelShader>("shader.ps");
 
-            var cbuffer = new Graphics.ConstantBuffer<MatrixBuffer>(device.Handle);
-            var cbuffers = new List<Graphics.ConstantBuffer>();
-            cbuffers.Add(cbuffer);
-
             var simplecubemesh = cache.Get<Graphics.Mesh>("simplecube.DAE");
-            var test = new Graphics.RenderCommand(renderTarget, rasterizerState, vertexShader, pixelShader, simplecubemesh.VertexBuffer);
-            test.VertexConstantBuffers = cbuffers;
+            var renderCommand = renderComponent.CreateCommand(device, renderTarget, rasterizerState, vertexShader, pixelShader, simplecubemesh);
 
-            test.IndexBuffer = simplecubemesh.IndexBuffer;
-            test.Texture = cache.Get<Graphics.Texture>("uv_map_reference.jpg");
+            renderCommand.Texture = cache.Get<Graphics.Texture>("uv_map_reference.jpg");
 
-            renderCommands.Add(test);
-
-            return cbuffer;
+            return entity;
         }
     }
 }

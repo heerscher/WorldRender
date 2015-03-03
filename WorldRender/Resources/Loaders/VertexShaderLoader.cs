@@ -18,7 +18,11 @@ namespace WorldRender.Resources.Loaders
 #endif
 
             this.device = device;
-            supportedTypes = new Type[] { typeof(Graphics.VertexShader) };
+            supportedTypes = new Type[]
+            {
+                typeof(Graphics.VertexShader),
+                typeof(Graphics.Effect)
+            };
         }
 
         public override IEnumerable<Type> SupportedTypes
@@ -40,7 +44,14 @@ namespace WorldRender.Resources.Loaders
                 new SlimDX.Direct3D11.InputElement("TEXCOORD", 0, SlimDX.DXGI.Format.R32G32_Float, 0)
             };
             
-            return new Graphics.VertexShader(device.Handle, inputElements, shaderCode, "VShader", SlimDX.D3DCompiler.ShaderFlags.None);
+            var vertexShader = new Graphics.VertexShader(device.Handle, inputElements, shaderCode, "VShader", SlimDX.D3DCompiler.ShaderFlags.None);
+
+            if (resourceType.Equals(typeof(Graphics.Effect)))
+            {
+                return new Graphics.Effect(vertexShader, new Graphics.PixelShader(device.Handle, shaderCode, "PShader", SlimDX.D3DCompiler.ShaderFlags.None));
+            }
+
+            return vertexShader;
         }
     }
 }
