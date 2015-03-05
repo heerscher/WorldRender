@@ -37,14 +37,25 @@ namespace WorldRender
                     var camera = new Graphics.Camera();
                     var cameraController = new Input.CameraController(inputState, camera);
 
+                    var keyBindingConfigurationFile = new Configuration.ConfigurationFile<Configuration.KeyBindingConfiguration>("keybindings.json");
+                    var keyBindingConfiguration = keyBindingConfigurationFile.Read();
+                    if (keyBindingConfiguration == null && keyBindingConfiguration.Bindings != null)
+                    {
+                        foreach (var keyBinding in keyBindingConfiguration.Bindings)
+                        {
+                            var command = inputState.Register(keyBinding.Command);
 
-                    // KEY BINDING TEST
-                    // TODO: this should come from some config file
-                    inputState.Register("moveForward").PrimaryBinding = new Input.KeyBinding(Keys.W);
-                    inputState.Register("moveBackward").PrimaryBinding = new Input.KeyBinding(Keys.S);
-                    inputState.Register("strafeLeft").PrimaryBinding = new Input.KeyBinding(Keys.A);
-                    inputState.Register("strafeRight").PrimaryBinding = new Input.KeyBinding(Keys.D);
-                    // END TEST
+                            if (keyBinding.PrimaryKey.HasValue)
+                            {
+                                command.PrimaryBinding = new Input.KeyBinding(keyBinding.PrimaryKey.Value);
+                            }
+
+                            if (keyBinding.SecondaryKey.HasValue)
+                            {
+                                command.SecondaryBinding = new Input.KeyBinding(keyBinding.SecondaryKey.Value);
+                            }
+                        }
+                    }
 
 
                     var testEntity = CreateTestEntity(device, resourceCache, entities);
