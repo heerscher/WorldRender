@@ -33,3 +33,4 @@ C:\Users\amelink\Desktop\WorldRender\WorldRender\obj\x86\Debug\WorldRender.cspro
 C:\Users\amelink\Desktop\WorldRender\WorldRender\obj\x86\Debug\WorldRender.Properties.Resources.resources
 C:\Users\amelink\Desktop\WorldRender\WorldRender\obj\x86\Debug\WorldRender.csproj.GenerateResource.Cache
 C:\Users\amelink\Desktop\WorldRender\WorldRender\bin\Debug\keybindings.json
+C:\Users\Heerscher\Desktop\WorldRender\WorldRender\bin\Debug\keybindings.json

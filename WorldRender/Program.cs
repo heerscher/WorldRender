@@ -39,22 +39,9 @@ namespace WorldRender
 
                     var keyBindingConfigurationFile = new Configuration.ConfigurationFile<Configuration.KeyBindingConfiguration>("keybindings.json");
                     var keyBindingConfiguration = keyBindingConfigurationFile.Read();
-                    if (keyBindingConfiguration == null && keyBindingConfiguration.Bindings != null)
+                    if (keyBindingConfiguration != null)
                     {
-                        foreach (var keyBinding in keyBindingConfiguration.Bindings)
-                        {
-                            var command = inputState.Register(keyBinding.Command);
-
-                            if (keyBinding.PrimaryKey.HasValue)
-                            {
-                                command.PrimaryBinding = new Input.KeyBinding(keyBinding.PrimaryKey.Value);
-                            }
-
-                            if (keyBinding.SecondaryKey.HasValue)
-                            {
-                                command.SecondaryBinding = new Input.KeyBinding(keyBinding.SecondaryKey.Value);
-                            }
-                        }
+                        keyBindingConfiguration.RegisterBindingsToInputState(inputState);
                     }
 
 
