@@ -3,12 +3,15 @@ using System.Collections.Generic;
 
 namespace WorldRender.Resources.Loaders
 {
-    class VertexShaderLoader : Loader
+    public class VertexShaderLoader : BaseLoader
     {
         private Graphics.Device device;
-        private IEnumerable<Type> supportedTypes;
 
         public VertexShaderLoader(Graphics.Device device)
+            : base(new Type[]
+            {
+                typeof(Graphics.VertexShader)
+            })
         {
 #if ASSERT
             if (device == null)
@@ -18,19 +21,6 @@ namespace WorldRender.Resources.Loaders
 #endif
 
             this.device = device;
-            supportedTypes = new Type[]
-            {
-                typeof(Graphics.VertexShader),
-                typeof(Graphics.Effect)
-            };
-        }
-
-        public override IEnumerable<Type> SupportedTypes
-        {
-            get
-            {
-                return supportedTypes;
-            }
         }
 
         public override IDisposable Load(Type resourceType, string identifier)

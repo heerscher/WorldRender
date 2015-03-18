@@ -4,12 +4,17 @@ using System.Linq;
 
 namespace WorldRender.Resources.Loaders
 {
-    public class MeshLoader : Loader
+    public class MeshLoader : BaseLoader
     {
         private Graphics.Device device;
         private IEnumerable<Type> supportedTypes;
 
         public MeshLoader(Graphics.Device device)
+            : base(new Type[]
+            {
+                typeof(Graphics.Mesh),
+                typeof(Graphics.MeshGroup)
+            })
         {
 #if ASSERT
             if (device == null)
@@ -19,20 +24,6 @@ namespace WorldRender.Resources.Loaders
 #endif
 
             this.device = device;
-
-            supportedTypes = new Type[]
-            {
-                typeof(Graphics.Mesh),
-                typeof(Graphics.MeshGroup)
-            };
-        }
-
-        public override IEnumerable<Type> SupportedTypes
-        {
-            get
-            {
-                return supportedTypes;
-            }
         }
 
         public override IDisposable Load(Type resourceType, string identifier)

@@ -1,14 +1,16 @@
 ﻿using System;
-using System.Collections.Generic;
 
 namespace WorldRender.Resources.Loaders
 {
-    public class RasterizerStateLoader : Loader
+    public class RasterizerStateLoader : BaseLoader
     {
         private Graphics.Device device;
-        private IEnumerable<Type> supportedTypes;
 
         public RasterizerStateLoader(Graphics.Device device)
+            : base(new Type[]
+            {
+                typeof(Graphics.RasterizerState)
+            })
         {
 #if ASSERT
             if (device == null)
@@ -18,19 +20,6 @@ namespace WorldRender.Resources.Loaders
 #endif
 
             this.device = device;
-
-            supportedTypes = new Type[]
-            {
-                typeof(Graphics.RasterizerState)
-            };
-        }
-
-        public override IEnumerable<Type> SupportedTypes
-        {
-            get
-            {
-                return supportedTypes;
-            }
         }
 
         public override IDisposable Load(Type resourceType, string identifier)

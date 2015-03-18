@@ -100,7 +100,8 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Resources\Cache.cs" />
-    <Compile Include="Resources\Loader.cs" />
+    <Compile Include="Resources\Loaders\BaseLoader.cs" />
+    <Compile Include="Resources\Loaders\ConstantBufferLoader.cs" />
     <Compile Include="Resources\Loaders\MeshLoader.cs" />
     <Compile Include="Resources\Loaders\PixelShaderLoader.cs" />
     <Compile Include="Resources\Loaders\RasterizerStateLoader.cs" />

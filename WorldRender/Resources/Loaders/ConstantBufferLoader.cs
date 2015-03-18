@@ -2,14 +2,15 @@
 
 namespace WorldRender.Resources.Loaders
 {
-    public class TextureLoader : BaseLoader
+    public class ConstantBufferLoader : BaseLoader
     {
         private Graphics.Device device;
 
-        public TextureLoader(Graphics.Device device)
+        public ConstantBufferLoader(Graphics.Device device)
             : base(new Type[]
             {
-                typeof(Graphics.Texture)
+                typeof(Graphics.ConstantBuffer),
+                typeof(Graphics.ConstantBuffer<>)
             })
         {
 #if ASSERT
@@ -24,7 +25,10 @@ namespace WorldRender.Resources.Loaders
 
         public override IDisposable Load(Type resourceType, string identifier)
         {
-            return new Graphics.Texture(device.Handle, identifier);
+            // Identifier maps to the type used as the generic type for the constant buffer
+
+
+            return default(IDisposable);
         }
     }
 }

@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace WorldRender.Resources
 {
     public class Cache : IDisposable
     {
-        private Dictionary<Type, Loader> loaders;
+        private Dictionary<Type, Loaders.BaseLoader> loaders;
         private Dictionary<string, IDisposable> resources;
 
         public Cache(Graphics.Device device)
@@ -19,15 +17,16 @@ namespace WorldRender.Resources
             }
 #endif
 
-            loaders = new Dictionary<Type, Loader>();
+            loaders = new Dictionary<Type, Loaders.BaseLoader>();
             resources = new Dictionary<string, IDisposable>(StringComparer.OrdinalIgnoreCase);
 
-            // Map resource loaders to specific types
+            // Map resource loaders to specific types (these are the default loaders for the engine)
             RegisterLoader(new Resources.Loaders.MeshLoader(device));
             RegisterLoader(new Resources.Loaders.VertexShaderLoader(device));
             RegisterLoader(new Resources.Loaders.PixelShaderLoader(device));
             RegisterLoader(new Resources.Loaders.TextureLoader(device));
             RegisterLoader(new Resources.Loaders.RasterizerStateLoader(device));
+            RegisterLoader(new Resources.Loaders.ConstantBufferLoader(device));
         }
 
         /// <summary>
@@ -43,7 +42,7 @@ namespace WorldRender.Resources
             resources.Clear();
         }
 
-        public void RegisterLoader(Loader resourceLoader)
+        public void RegisterLoader(Loaders.BaseLoader resourceLoader)
         {
 #if ASSERT
             if (resourceLoader == null)
