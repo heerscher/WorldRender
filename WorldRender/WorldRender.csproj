@@ -83,7 +83,7 @@
     <Compile Include="Graphics\Shaders\PixelShader.cs" />
     <Compile Include="Graphics\Shaders\VertexShader.cs" />
     <Compile Include="Graphics\TextRenderer.cs" />
-    <Compile Include="Graphics\Texture.cs" />
+    <Compile Include="Graphics\Texture2d.cs" />
     <Compile Include="Graphics\UniqueId.cs" />
     <Compile Include="Graphics\VertexBuffer.cs" />
     <Compile Include="Input\CameraController.cs" />

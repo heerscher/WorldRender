@@ -80,7 +80,7 @@ namespace WorldRender
             var simplecubemesh = cache.Get<Graphics.Mesh>("simplecube.DAE");
             var renderCommand = renderComponent.CreateCommand(device, renderTarget, rasterizerState, vertexShader, pixelShader, simplecubemesh);
 
-            renderCommand.Texture = cache.Get<Graphics.Texture>("uv_map_reference.jpg");
+            renderCommand.Texture = cache.Get<Graphics.Texture2d>("uv_map_reference.jpg");
 
             return entity;
         }

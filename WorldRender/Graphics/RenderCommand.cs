@@ -12,11 +12,11 @@ namespace WorldRender.Graphics
         private RenderTarget renderTarget;
         private Shaders.PixelShader pixelShader;
         private UInt64 sortKey;
-        private Texture texture;
+        private Texture2d texture;
         private VertexBuffer vertexBuffer;
         private Shaders.VertexShader vertexShader;
 
-        public Texture Texture
+        public Texture2d Texture
         {
             get
             {

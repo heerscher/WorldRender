@@ -9,7 +9,7 @@ namespace WorldRender.Resources.Loaders
         public TextureLoader(Graphics.Device device)
             : base(new Type[]
             {
-                typeof(Graphics.Texture)
+                typeof(Graphics.Texture2d)
             })
         {
 #if ASSERT
@@ -24,7 +24,7 @@ namespace WorldRender.Resources.Loaders
 
         public override IDisposable Load(Type resourceType, string identifier)
         {
-            return new Graphics.Texture(device.Handle, identifier);
+            return new Graphics.Texture2d(device.Handle, identifier);
         }
     }
 }

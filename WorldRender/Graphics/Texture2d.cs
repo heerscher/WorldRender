@@ -5,11 +5,11 @@ using System.Text;
 
 namespace WorldRender.Graphics
 {
-    public class Texture : IDisposable
+    public class Texture2d : IDisposable
     {
         private SlimDX.Direct3D11.Texture2D texture2d;
         private SlimDX.Direct3D11.ShaderResourceView shaderResourceView;
-        private UniqueId<Texture> uniqueId;
+        private UniqueId<Texture2d> uniqueId;
 
         internal int Id
         {
@@ -19,7 +19,7 @@ namespace WorldRender.Graphics
             }
         }
 
-        internal Texture(SlimDX.Direct3D11.Device device, string fileName)
+        internal Texture2d(SlimDX.Direct3D11.Device device, string fileName)
         {
 #if ASSERT
             if (device == null)
@@ -30,7 +30,7 @@ namespace WorldRender.Graphics
 
             texture2d = SlimDX.Direct3D11.Texture2D.FromFile(device, fileName);
             shaderResourceView = new SlimDX.Direct3D11.ShaderResourceView(device, texture2d);
-            uniqueId = new UniqueId<Texture>();
+            uniqueId = new UniqueId<Texture2d>();
         }
 
         internal void Render(SlimDX.Direct3D11.DeviceContext deviceContext)
