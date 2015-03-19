@@ -1,8 +1,0 @@
-C:\Users\Heerscher\Desktop\WorldRender\WorldRender\bin\Release\WorldRender.exe
-C:\Users\Heerscher\Desktop\WorldRender\WorldRender\bin\Release\WorldRender.pdb
-C:\Users\Heerscher\Desktop\WorldRender\WorldRender\bin\Release\AssimpNet.dll
-C:\Users\Heerscher\Desktop\WorldRender\WorldRender\bin\Release\AssimpNet.xml
-C:\Users\Heerscher\Desktop\WorldRender\WorldRender\obj\x86\Release\WorldRender.Properties.Resources.resources
-C:\Users\Heerscher\Desktop\WorldRender\WorldRender\obj\x86\Release\WorldRender.csproj.GenerateResource.Cache
-C:\Users\Heerscher\Desktop\WorldRender\WorldRender\obj\x86\Release\WorldRender.exe
-C:\Users\Heerscher\Desktop\WorldRender\WorldRender\obj\x86\Release\WorldRender.pdb

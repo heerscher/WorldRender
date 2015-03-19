@@ -1,1 +1,0 @@
-{"Bindings":[{"Command":"moveForward","PrimaryKey":87,"SecondaryKey":null},{"Command":"moveBackward","PrimaryKey":83,"SecondaryKey":null},{"Command":"strafeLeft","PrimaryKey":65,"SecondaryKey":null},{"Command":"strafeRight","PrimaryKey":68,"SecondaryKey":null}]}
