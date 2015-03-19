@@ -21,12 +21,13 @@ namespace WorldRender.Resources
             resources = new Dictionary<string, IDisposable>(StringComparer.OrdinalIgnoreCase);
 
             // Map resource loaders to specific types (these are the default loaders for the engine)
+            RegisterLoader(new Resources.Loaders.TextureLoader(device));
             RegisterLoader(new Resources.Loaders.MeshLoader(device));
+            RegisterLoader(new Resources.Loaders.MaterialLoader());
             RegisterLoader(new Resources.Loaders.VertexShaderLoader(device));
             RegisterLoader(new Resources.Loaders.PixelShaderLoader(device));
-            RegisterLoader(new Resources.Loaders.TextureLoader(device));
-            RegisterLoader(new Resources.Loaders.RasterizerStateLoader(device));
             RegisterLoader(new Resources.Loaders.ConstantBufferLoader(device));
+            RegisterLoader(new Resources.Loaders.RasterizerStateLoader(device));
         }
 
         /// <summary>
