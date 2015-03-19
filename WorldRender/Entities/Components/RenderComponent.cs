@@ -40,7 +40,7 @@ namespace WorldRender.Entities.Components
             return renderCommand;
         }
 
-        public Graphics.RenderCommand CreateCommand(Graphics.Device device, Graphics.RenderTarget renderTarget, Graphics.RasterizerState rasterizerState, Graphics.VertexShader vertexShader, Graphics.PixelShader pixelShader, Graphics.Mesh mesh)
+        public Graphics.RenderCommand CreateCommand(Graphics.Device device, Graphics.RenderTarget renderTarget, Graphics.RasterizerState rasterizerState, Graphics.Shaders.VertexShader vertexShader, Graphics.Shaders.PixelShader pixelShader, Graphics.Mesh mesh)
         {
             CreateCommand(device, renderTarget, rasterizerState, vertexShader, pixelShader, mesh.VertexBuffer);
 
@@ -49,7 +49,7 @@ namespace WorldRender.Entities.Components
             return renderCommand;
         }
 
-        public Graphics.RenderCommand CreateCommand(Graphics.Device device, Graphics.RenderTarget renderTarget, Graphics.RasterizerState rasterizerState, Graphics.VertexShader vertexShader, Graphics.PixelShader pixelShader, Graphics.VertexBuffer vertexBuffer)
+        public Graphics.RenderCommand CreateCommand(Graphics.Device device, Graphics.RenderTarget renderTarget, Graphics.RasterizerState rasterizerState, Graphics.Shaders.VertexShader vertexShader, Graphics.Shaders.PixelShader pixelShader, Graphics.VertexBuffer vertexBuffer)
         {
 #if ASSERT
             if (device == null)

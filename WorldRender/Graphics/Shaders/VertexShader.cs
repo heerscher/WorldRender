@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace WorldRender.Graphics
+namespace WorldRender.Graphics.Shaders
 {
     public class VertexShader : IDisposable
     {

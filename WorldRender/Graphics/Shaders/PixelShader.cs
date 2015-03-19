@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace WorldRender.Graphics
+namespace WorldRender.Graphics.Shaders
 {
     public class PixelShader : IDisposable
     {

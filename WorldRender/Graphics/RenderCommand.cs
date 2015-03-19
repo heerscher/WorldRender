@@ -10,11 +10,11 @@ namespace WorldRender.Graphics
     {
         private RasterizerState rasterizerState;
         private RenderTarget renderTarget;
-        private PixelShader pixelShader;
+        private Shaders.PixelShader pixelShader;
         private UInt64 sortKey;
         private Texture texture;
         private VertexBuffer vertexBuffer;
-        private VertexShader vertexShader;
+        private Shaders.VertexShader vertexShader;
 
         public Texture Texture
         {
@@ -33,7 +33,7 @@ namespace WorldRender.Graphics
         public IEnumerable<ConstantBuffer> PixelConstantBuffers { get; set; }
         public IEnumerable<ConstantBuffer> VertexConstantBuffers { get; set; }
 
-        public RenderCommand(RenderTarget renderTarget, RasterizerState rasterizerState, VertexShader vertexShader, PixelShader pixelShader, VertexBuffer vertexBuffer)
+        public RenderCommand(RenderTarget renderTarget, RasterizerState rasterizerState, Shaders.VertexShader vertexShader, Shaders.PixelShader pixelShader, VertexBuffer vertexBuffer)
         {
 #if ASSERT
             if (renderTarget == null)

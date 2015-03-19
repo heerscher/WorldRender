@@ -9,7 +9,7 @@ namespace WorldRender.Resources.Loaders
         public PixelShaderLoader(Graphics.Device device)
             : base(new Type[]
             {
-                typeof(Graphics.PixelShader)
+                typeof(Graphics.Shaders.PixelShader)
             })
         {
 #if ASSERT
@@ -26,7 +26,7 @@ namespace WorldRender.Resources.Loaders
         {
             var shaderCode = System.IO.File.ReadAllText(identifier);
 
-            return new Graphics.PixelShader(device.Handle, shaderCode, "PShader", SlimDX.D3DCompiler.ShaderFlags.None);
+            return new Graphics.Shaders.PixelShader(device.Handle, shaderCode, "PShader", SlimDX.D3DCompiler.ShaderFlags.None);
         }
     }
 }

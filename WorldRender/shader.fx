@@ -1,4 +1,7 @@
 ﻿
+Texture2D shaderTexture;
+SamplerState SampleType;
+
 cbuffer MatrixBuffer
 {
     matrix worldMatrix;
@@ -13,16 +16,16 @@ struct VertexInput
 	float2 texCoord : TEXCOORD0;
 };
 
-struct VertexOutput
+struct PixelInput
 {
     float4 position : SV_POSITION;
     float4 normal : NORMAL;
 	float2 texCoord : TEXCOORD0;
 };
 
-VertexOutput VShader(VertexInput input)
+PixelInput VShader(VertexInput input)
 {
-    VertexOutput output = (VertexOutput)0;
+    PixelInput output = (PixelInput)0;
     
 	output.position = float4(input.position.xyz, 1.0f);
     output.position = mul(output.position, worldMatrix);
@@ -32,4 +35,20 @@ VertexOutput VShader(VertexInput input)
 	output.texCoord = input.texCoord;
     
 	return output;
+}
+
+float4 PShader(PixelInput input) : SV_TARGET
+{
+	float4 color = float4(0.1f, 0.1f, 0.1f, 1.0f); // ambient
+
+    float4 lightDirection = float4(0.0f, 1.0f, 0.0f, 1.0f);
+	float lightIntensity = saturate(dot(normalize(input.normal), lightDirection));
+
+    float4 lightColor = float4(1.0f, 0.9f, 0.2f, 1.0f);
+	color += saturate(lightColor * lightIntensity);
+	
+	float4 diffuseColor = shaderTexture.Sample(SampleType, input.texCoord);
+	color *= diffuseColor;
+
+	return color;
 }

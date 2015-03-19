@@ -73,19 +73,19 @@
     <Compile Include="Graphics\Camera.cs" />
     <Compile Include="Graphics\ConstantBuffer.cs" />
     <Compile Include="Graphics\Device.cs" />
-    <Compile Include="Graphics\Effect.cs" />
     <Compile Include="Graphics\IndexBuffer.cs" />
     <Compile Include="Graphics\Mesh.cs" />
     <Compile Include="Graphics\MeshGroup.cs" />
-    <Compile Include="Graphics\PixelShader.cs" />
     <Compile Include="Graphics\RasterizerState.cs" />
     <Compile Include="Graphics\RenderCommand.cs" />
     <Compile Include="Graphics\RenderTarget.cs" />
+    <Compile Include="Graphics\Shaders\CompiledShader.cs" />
+    <Compile Include="Graphics\Shaders\PixelShader.cs" />
+    <Compile Include="Graphics\Shaders\VertexShader.cs" />
     <Compile Include="Graphics\TextRenderer.cs" />
     <Compile Include="Graphics\Texture.cs" />
     <Compile Include="Graphics\UniqueId.cs" />
     <Compile Include="Graphics\VertexBuffer.cs" />
-    <Compile Include="Graphics\VertexShader.cs" />
     <Compile Include="Input\CameraController.cs" />
     <Compile Include="Input\Command.cs" />
     <Compile Include="Input\CommandCollection.cs" />
@@ -108,12 +108,6 @@
     <Compile Include="Resources\Loaders\TextureLoader.cs" />
     <Compile Include="Resources\Loaders\VertexShaderLoader.cs" />
     <Compile Include="Timing\Timer.cs" />
-    <Content Include="shader.ps">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="shader.vs">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <Content Include="uv_map_reference.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -143,6 +137,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="texteffect.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="shader.fx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

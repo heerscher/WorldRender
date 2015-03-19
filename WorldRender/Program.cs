@@ -74,8 +74,8 @@ namespace WorldRender
             var renderTarget = device.CreateScreenRenderTarget();
             var rasterizerState = cache.Get<Graphics.RasterizerState>("default");
 
-            var vertexShader = cache.Get<Graphics.VertexShader>("shader.vs");
-            var pixelShader = cache.Get<Graphics.PixelShader>("shader.ps");
+            var vertexShader = cache.Get<Graphics.Shaders.VertexShader>("shader.fx");
+            var pixelShader = cache.Get<Graphics.Shaders.PixelShader>("shader.fx");
 
             var simplecubemesh = cache.Get<Graphics.Mesh>("simplecube.DAE");
             var renderCommand = renderComponent.CreateCommand(device, renderTarget, rasterizerState, vertexShader, pixelShader, simplecubemesh);

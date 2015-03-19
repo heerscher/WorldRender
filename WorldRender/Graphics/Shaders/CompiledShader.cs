@@ -1,12 +1,18 @@
 ﻿using System;
 
-namespace WorldRender.Graphics
+namespace WorldRender.Graphics.Shaders
 {
-    public class Effect : IDisposable
+    /// <summary>
+    /// Represents a group of compiled shaders that belong together.
+    /// </summary>
+    public sealed class CompiledShader
     {
         private PixelShader pixelShader;
         private VertexShader vertexShader;
 
+        /// <summary>
+        /// Gets the compiled pixel shader.
+        /// </summary>
         public PixelShader PixelShader
         {
             get
@@ -15,6 +21,9 @@ namespace WorldRender.Graphics
             }
         }
 
+        /// <summary>
+        /// Gets the compiled vertex shader.
+        /// </summary>
         public VertexShader VertexShader
         {
             get
@@ -23,7 +32,7 @@ namespace WorldRender.Graphics
             }
         }
 
-        public Effect(VertexShader vertexShader, PixelShader pixelShader)
+        public CompiledShader(VertexShader vertexShader, PixelShader pixelShader)
         {
 #if ASSERT
             if (vertexShader == null)
@@ -33,28 +42,12 @@ namespace WorldRender.Graphics
 
             if (pixelShader == null)
             {
-                throw new ArgumentNullException("pixelShader");
+                throw new ArgumentNullException("pixelShader"); 
             }
 #endif
 
             this.pixelShader = pixelShader;
             this.vertexShader = vertexShader;
-        }
-
-        public void Dispose()
-        {
-            if (pixelShader != null)
-            {
-                pixelShader.Dispose();
-            }
-
-            if (vertexShader != null)
-            {
-                vertexShader.Dispose();
-            }
-
-            pixelShader = null;
-            vertexShader = null;
         }
     }
 }
