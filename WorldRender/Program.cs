@@ -45,8 +45,6 @@ namespace WorldRender
                         keyBindingConfiguration.RegisterBindingsToInputState(inputState);
                     }
 
-                    var materialGroup = resourceCache.Get<Graphics.Materials.MaterialGroup>("materials.json");
-
 
                     var testEntity = CreateTestEntity(device, resourceCache, entities);
 
@@ -93,15 +91,13 @@ namespace WorldRender
         {
             var entity = entities.CreateEntity();
             var renderComponent = entity.AddComponent<Entities.Components.RenderComponent>();
-
-            var vertexShader = cache.Get<Graphics.Shaders.VertexShader>("shader.fx");
-            var pixelShader = cache.Get<Graphics.Shaders.PixelShader>("shader.fx");
-            var compiledShader = new Graphics.Shaders.CompiledShader(vertexShader, pixelShader);
+            var material = cache.Get<Graphics.Materials.Material>("default");
 
             renderComponent.RenderCommand = new Graphics.RenderCommand(cache)
             {
-                Shader = compiledShader,
                 Mesh = cache.Get<Graphics.Mesh>("simplecube.DAE"),
+                RasterizerState = material.GetRasterizerState(cache),
+                Shader = material.GetShader(cache),
                 Texture = cache.Get<Graphics.Texture2d>("uv_map_reference.jpg")
             };
 

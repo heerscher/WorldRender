@@ -1,7 +1,8 @@
 ﻿[
 	{
 		"Name":"default",
-		"ShaderIdentifier":"default",
-		"Opaque":"true"
+		"ShaderIdentifier":"shader.fx",
+		"Opaque":"true",
+		"Wireframe":"true"
 	}
 ]

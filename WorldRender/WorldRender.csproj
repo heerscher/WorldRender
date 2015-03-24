@@ -76,7 +76,6 @@
     <Compile Include="Graphics\IndexBuffer.cs" />
     <Compile Include="Graphics\Materials\Material.cs" />
     <Compile Include="Graphics\Materials\MaterialDescriptor.cs" />
-    <Compile Include="Graphics\Materials\MaterialGroup.cs" />
     <Compile Include="Graphics\Mesh.cs" />
     <Compile Include="Graphics\MeshGroup.cs" />
     <Compile Include="Graphics\RasterizerState.cs" />

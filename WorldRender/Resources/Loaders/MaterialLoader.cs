@@ -7,26 +7,44 @@ namespace WorldRender.Resources.Loaders
 {
     public class MaterialLoader : BaseLoader
     {
+        private Dictionary<string, Graphics.Materials.Material> materials;
+
         public MaterialLoader()
             : base(new Type[]
             {
-                typeof(Graphics.Materials.MaterialGroup)
+                typeof(Graphics.Materials.Material)
             })
         {
         }
 
         public override IDisposable Load(Type resourceType, string identifier)
         {
-            var materialFileContent = System.IO.File.ReadAllText(identifier);
-            var descriptors = Newtonsoft.Json.JsonConvert.DeserializeObject<IEnumerable<Graphics.Materials.MaterialDescriptor>>(materialFileContent);
-            var materials = new List<Graphics.Materials.Material>(descriptors.Count());
-
-            foreach (var descriptor in descriptors)
+            if (materials == null)
             {
-                materials.Add(new Graphics.Materials.Material(descriptor));
+                var materialFileContent = System.IO.File.ReadAllText("materials.json");
+                var descriptors = Newtonsoft.Json.JsonConvert.DeserializeObject<IEnumerable<Graphics.Materials.MaterialDescriptor>>(materialFileContent);
+
+                materials = new Dictionary<string, Graphics.Materials.Material>(descriptors.Count(), StringComparer.OrdinalIgnoreCase);
+
+                foreach (var descriptor in descriptors)
+                {
+                    if (materials.ContainsKey(descriptor.Name))
+                    {
+                        throw new ArgumentException("Duplicate material name '" + descriptor.Name + "' used in material file.");
+                    }
+
+                    materials.Add(descriptor.Name, new Graphics.Materials.Material(descriptor));
+                }
             }
 
-            return new Graphics.Materials.MaterialGroup(materials);
+            if (materials.ContainsKey(identifier))
+            {
+                return materials[identifier];
+            }
+            else
+            {
+                throw new KeyNotFoundException("Failed to load material: " + identifier);
+            }
         }
     }
 }
