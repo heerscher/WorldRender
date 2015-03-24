@@ -9,7 +9,7 @@ namespace WorldRender.Entities.Components
     {
         private Entity entity;
 
-        protected Entity Entity
+        public Entity Entity
         {
             get
             {

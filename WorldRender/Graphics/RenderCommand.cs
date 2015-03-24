@@ -8,82 +8,47 @@ namespace WorldRender.Graphics
     /// </summary>
     public class RenderCommand : IComparable<RenderCommand>
     {
-        private RasterizerState rasterizerState;
-        private RenderTarget renderTarget;
-        private Shaders.PixelShader pixelShader;
         private UInt64 sortKey;
-        private Texture2d texture;
-        private VertexBuffer vertexBuffer;
-        private Shaders.VertexShader vertexShader;
+        private ConstantBuffer<Shaders.VertexConstantBuffer> vertexConstantBuffer;
 
-        public Texture2d Texture
+        public Mesh Mesh { get; set; }
+        public MeshGroup MeshGroup { get; set; }
+        public RasterizerState RasterizerState { get; set; }
+        public RenderTarget RenderTarget { get; set; }
+        public Shaders.CompiledShader Shader { get; set; }
+        public Texture2d Texture { get; set; }
+        public Shaders.VertexConstantBuffer VertexConstants;
+
+        public RenderCommand()
         {
-            get
-            {
-                return texture;
-            }
-            set
-            {
-                texture = value;
-                UpdateSortKey();
-            }
+            UpdateSortKey();
         }
 
-        public IndexBuffer IndexBuffer { get; set; }
-        public IEnumerable<ConstantBuffer> PixelConstantBuffers { get; set; }
-        public IEnumerable<ConstantBuffer> VertexConstantBuffers { get; set; }
-
-        public RenderCommand(RenderTarget renderTarget, RasterizerState rasterizerState, Shaders.VertexShader vertexShader, Shaders.PixelShader pixelShader, VertexBuffer vertexBuffer)
+        public RenderCommand(Resources.Cache cache)
         {
 #if ASSERT
-            if (renderTarget == null)
+            if (cache == null)
             {
-                throw new ArgumentNullException("renderTarget");
-            }
-
-            if (rasterizerState == null)
-            {
-                throw new ArgumentNullException("rasterizerState");
-            }
-
-            if (vertexShader == null)
-            {
-                throw new ArgumentNullException("vertexShader");
-            }
-
-            if (pixelShader == null)
-            {
-                throw new ArgumentNullException("pixelShader");
-            }
-
-            if (vertexBuffer == null)
-            {
-                throw new ArgumentNullException("vertexBuffer");
+                throw new ArgumentNullException("cache");
             }
 #endif
-
-            this.rasterizerState = rasterizerState;
-            this.renderTarget = renderTarget;
-            this.pixelShader = pixelShader;
-            this.vertexBuffer = vertexBuffer;
-            this.vertexShader = vertexShader;
+            
+            RasterizerState = cache.Get<RasterizerState>("default");
+            RenderTarget = cache.Get<RenderTarget>("screen");
+            vertexConstantBuffer = cache.VertexConstantBuffer;
 
             UpdateSortKey();
         }
 
-        private void UpdateSortKey()
+        public void UpdateSortKey()
         {
             // Calculate sortkey
             sortKey = 0UL;
-            sortKey += Convert.ToUInt64(renderTarget.Id) << 60;
-            sortKey += Convert.ToUInt64(vertexShader.Id) << 56;
-            sortKey += Convert.ToUInt64(pixelShader.Id) << 52;
-            sortKey += Convert.ToUInt64(rasterizerState.Id) << 48;
-
-            if (texture != null)
-            {
-                sortKey += Convert.ToUInt64(texture.Id) << 44;
-            }
+            sortKey += RenderTarget != null ? Convert.ToUInt64(RenderTarget.Id) << 60 : 0;
+            sortKey += Shader != null && Shader.VertexShader != null ? Convert.ToUInt64(Shader.VertexShader.Id) << 56 : 0;
+            sortKey += Shader != null && Shader.PixelShader != null ? Convert.ToUInt64(Shader.PixelShader.Id) << 52 : 0;
+            sortKey += RasterizerState != null ? Convert.ToUInt64(RasterizerState.Id) << 48 : 0;
+            sortKey += Texture != null ? Convert.ToUInt64(Texture.Id) << 44 : 0;
         }
 
         public void Render(Device device)
@@ -95,52 +60,51 @@ namespace WorldRender.Graphics
             }
 #endif
 
-            renderTarget.Render(device.Context);
-            vertexShader.Render(device.Context);
-
-            if (VertexConstantBuffers != null)
+            if (RenderTarget != null && Shader != null && Shader.VertexShader != null && Shader.PixelShader != null && RasterizerState != null && vertexConstantBuffer != null)
             {
-                var slot = 0;
+                RenderTarget.Render(device.Context);
+                Shader.VertexShader.Render(device.Context);
 
-                foreach (var constantBuffer in VertexConstantBuffers)
+                vertexConstantBuffer.Write(ref VertexConstants);
+                vertexConstantBuffer.UpdateVertexShader(device.Context, 0);
+
+                Shader.PixelShader.Render(device.Context);
+
+                if (Texture != null)
                 {
-                    constantBuffer.UpdateVertexShader(device.Context, slot);
-
-                    ++slot;
+                    Texture.Render(device.Context);
                 }
-            }
 
-            pixelShader.Render(device.Context);
+                RasterizerState.Render(device.Context);
 
-            if (PixelConstantBuffers != null)
-            {
-                var slot = 0;
-
-                foreach (var constantBuffer in PixelConstantBuffers)
+                if (MeshGroup != null)
                 {
-                    constantBuffer.UpdatePixelShader(device.Context, slot);
-
-                    ++slot;
+                    foreach (var mesh in MeshGroup.Meshes)
+                    {
+                        RenderMesh(device, mesh);
+                    }
                 }
+
+                RenderMesh(device, Mesh);
             }
+        }
 
-            if (texture != null)
+        private void RenderMesh(Device device, Mesh mesh)
+        {
+            if (Mesh != null && Mesh.VertexBuffer != null)
             {
-                texture.Render(device.Context);
-            }
+                Mesh.VertexBuffer.Render(device.Context);
 
-            rasterizerState.Render(device.Context);
-            vertexBuffer.Render(device.Context);
+                if (Mesh.IndexBuffer == null)
+                {
+                    device.Context.Draw(Mesh.VertexBuffer.Count, 0);
+                }
+                else
+                {
+                    Mesh.IndexBuffer.Render(device.Context);
 
-            if (IndexBuffer == null)
-            {
-                device.Context.Draw(vertexBuffer.Count, 0);
-            }
-            else
-            {
-                IndexBuffer.Render(device.Context);
-
-                device.Context.DrawIndexed(IndexBuffer.Count, 0, 0);
+                    device.Context.DrawIndexed(Mesh.IndexBuffer.Count, 0, 0);
+                }
             }
         }
 

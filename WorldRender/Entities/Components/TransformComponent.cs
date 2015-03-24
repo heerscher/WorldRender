@@ -1,18 +1,33 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
+﻿
 namespace WorldRender.Entities.Components
 {
     public class TransformComponent : Component
     {
-        public SlimDX.Matrix Matrix { get; set; }
+        private SlimDX.Matrix matrix;
+
+        public SlimDX.Matrix Matrix
+        {
+            get
+            {
+                return matrix;
+            }
+            set
+            {
+                matrix = value;
+            }
+        }
 
         public TransformComponent(Entity entity)
             : base(entity)
         {
-            Matrix = SlimDX.Matrix.Identity;
+            matrix = SlimDX.Matrix.Identity;
+        }
+
+        public void Translate(SlimDX.Vector3 translation)
+        {
+            matrix[0, 3] += translation.X;
+            matrix[1, 3] += translation.Y;
+            matrix[2, 3] += translation.Z;
         }
     }
 }

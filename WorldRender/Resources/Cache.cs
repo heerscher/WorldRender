@@ -7,6 +7,15 @@ namespace WorldRender.Resources
     {
         private Dictionary<Type, Loaders.BaseLoader> loaders;
         private Dictionary<string, IDisposable> resources;
+        private Graphics.ConstantBuffer<Graphics.Shaders.VertexConstantBuffer> vertexConstantBuffer;
+
+        public Graphics.ConstantBuffer<Graphics.Shaders.VertexConstantBuffer> VertexConstantBuffer
+        {
+            get
+            {
+                return vertexConstantBuffer;
+            }
+        }
 
         public Cache(Graphics.Device device)
         {
@@ -19,6 +28,7 @@ namespace WorldRender.Resources
 
             loaders = new Dictionary<Type, Loaders.BaseLoader>();
             resources = new Dictionary<string, IDisposable>(StringComparer.OrdinalIgnoreCase);
+            vertexConstantBuffer = new Graphics.ConstantBuffer<Graphics.Shaders.VertexConstantBuffer>(device.Handle);
 
             // Map resource loaders to specific types (these are the default loaders for the engine)
             RegisterLoader(new Resources.Loaders.TextureLoader(device));
@@ -26,8 +36,8 @@ namespace WorldRender.Resources
             RegisterLoader(new Resources.Loaders.MaterialLoader());
             RegisterLoader(new Resources.Loaders.VertexShaderLoader(device));
             RegisterLoader(new Resources.Loaders.PixelShaderLoader(device));
-            RegisterLoader(new Resources.Loaders.ConstantBufferLoader(device));
             RegisterLoader(new Resources.Loaders.RasterizerStateLoader(device));
+            RegisterLoader(new Resources.Loaders.RenderTargetLoader(device));
         }
 
         /// <summary>
@@ -75,17 +85,17 @@ namespace WorldRender.Resources
             }
 #endif
 
-            if (resources.ContainsKey(identifier))
+            var resourceType = typeof(TResource);
+            var resourceKey = string.Concat(resourceType.FullName, "/", identifier);
+
+            if (resources.ContainsKey(resourceKey))
             {
                 // Resource already loaded, return it
-                return (TResource)resources[identifier];
+                return (TResource)resources[resourceKey];
             }
             else
             {
                 // Attempt to load the resource
-                var resourceType = typeof(TResource);
-                var resourceKey = string.Concat(resourceType.FullName, "/", identifier);
-
                 if (!loaders.ContainsKey(resourceType))
                 {
                     throw new NotSupportedException("No resource loader registered for type " + resourceType.FullName);
@@ -105,6 +115,8 @@ namespace WorldRender.Resources
             Unload();
 
             loaders.Clear();
+
+            vertexConstantBuffer.Dispose();
         }
     }
 }

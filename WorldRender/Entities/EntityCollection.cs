@@ -1,16 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace WorldRender.Entities
 {
+    /// <summary>
+    /// A collection of entities.
+    /// </summary>
     public class EntityCollection
     {
-        private const int DefaultCapacity = 32;
+        private const int DefaultCapacity = 1024;
 
         private List<Entity> entities;
-        private List<Graphics.RenderCommand> renderCommands;
 
         public EntityCollection()
             : this(DefaultCapacity)
@@ -27,47 +28,34 @@ namespace WorldRender.Entities
 #endif
 
             entities = new List<Entity>(capacity);
-            renderCommands = new List<Graphics.RenderCommand>(capacity);
         }
 
+        /// <summary>
+        /// Creates a new entity that is part of this collection.
+        /// </summary>
         public Entity CreateEntity()
         {
-            var result = new Entity();
+            return CreateEntity<Entity>();
+        }
+
+        /// <summary>
+        /// Creates a new entity that is part of this collection.
+        /// </summary>
+        public TEntity CreateEntity<TEntity>() where TEntity : Entity
+        {
+            var result = Activator.CreateInstance<TEntity>();
 
             entities.Add(result);
 
             return result;
         }
 
+        /// <summary>
+        /// Gets all components of a specific type from all entities (only if they have it).
+        /// </summary>
         public IEnumerable<TComponent> GetComponents<TComponent>() where TComponent : Components.Component
         {
             return entities.Where(e => e.HasComponent<TComponent>()).Select(e => e.GetComponent<TComponent>());
-        }
-
-        public IEnumerable<Graphics.RenderCommand> Render(ref SlimDX.Matrix view, ref SlimDX.Matrix projection)
-        {
-            renderCommands.Clear();
-
-            Entities.Components.RenderComponent renderComponent = null;
-
-            foreach (var entity in entities)
-            {
-                renderComponent = entity.GetComponent<Entities.Components.RenderComponent>();
-
-                if (renderComponent != null)
-                {
-                    var renderCommand = renderComponent.Render(ref view, ref projection);
-
-                    if (renderCommand != null)
-                    {
-                        renderCommands.Add(renderCommand);
-                    }
-                }
-            }
-
-            renderCommands.Sort();
-
-            return renderCommands;
         }
     }
 }

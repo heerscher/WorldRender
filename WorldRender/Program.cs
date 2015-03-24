@@ -36,6 +36,7 @@ namespace WorldRender
                     var projection = SlimDX.Matrix.Transpose(SlimDX.Matrix.PerspectiveFovLH(fieldOfView, aspectRatio, near, far));
                     var camera = new Graphics.Camera();
                     var cameraController = new Input.CameraController(inputState, camera);
+                    var renderCommands = new List<Graphics.RenderCommand>(1024);
 
                     var keyBindingConfigurationFile = new Configuration.ConfigurationFile<Configuration.KeyBindingConfiguration>("keybindings.json");
                     var keyBindingConfiguration = keyBindingConfigurationFile.Read();
@@ -44,8 +45,13 @@ namespace WorldRender
                         keyBindingConfiguration.RegisterBindingsToInputState(inputState);
                     }
 
+                    var materialGroup = resourceCache.Get<Graphics.Materials.MaterialGroup>("materials.json");
+
 
                     var testEntity = CreateTestEntity(device, resourceCache, entities);
+
+                    var testEntity2 = CreateTestEntity(device, resourceCache, entities);
+                    testEntity2.Transform.Translate(new SlimDX.Vector3(1, 1, 1));
 
 
                     SlimDX.Windows.MessagePump.Run(device.Form, () =>
@@ -54,15 +60,32 @@ namespace WorldRender
                         inputState.UpdateState();
                         cameraController.Update(deltaTime);
 
+                        // Create the view matrix from camera parameters
                         var view = SlimDX.Matrix.Transpose(camera.View);
 
+                        // Clears various buffers, including the screen
                         device.Clear();
-                        device.Render(entities.Render(ref view, ref projection));
+                        
+                        // Convert renderable entities into render commands and sort them
+                        renderCommands.Clear();
+                        renderCommands.AddRange(entities.GetComponents<Entities.Components.RenderComponent>().Select(r => UpdateRenderCommandConstants(r, ref view, ref projection)));
+                        renderCommands.Sort();
 
+                        // Executes the render commands and renders the output to screen
+                        device.Render(renderCommands);
                         device.Present();
                     });
                 }
             }
+        }
+
+        private static Graphics.RenderCommand UpdateRenderCommandConstants(Entities.Components.RenderComponent renderComponent, ref SlimDX.Matrix view, ref SlimDX.Matrix projection)
+        {
+            renderComponent.RenderCommand.VertexConstants.World = renderComponent.Entity.Transform.Matrix;
+            renderComponent.RenderCommand.VertexConstants.View = view;
+            renderComponent.RenderCommand.VertexConstants.Projection = projection;
+
+            return renderComponent.RenderCommand;
         }
 
 
@@ -71,16 +94,16 @@ namespace WorldRender
             var entity = entities.CreateEntity();
             var renderComponent = entity.AddComponent<Entities.Components.RenderComponent>();
 
-            var renderTarget = device.CreateScreenRenderTarget();
-            var rasterizerState = cache.Get<Graphics.RasterizerState>("default");
-
             var vertexShader = cache.Get<Graphics.Shaders.VertexShader>("shader.fx");
             var pixelShader = cache.Get<Graphics.Shaders.PixelShader>("shader.fx");
+            var compiledShader = new Graphics.Shaders.CompiledShader(vertexShader, pixelShader);
 
-            var simplecubemesh = cache.Get<Graphics.Mesh>("simplecube.DAE");
-            var renderCommand = renderComponent.CreateCommand(device, renderTarget, rasterizerState, vertexShader, pixelShader, simplecubemesh);
-
-            renderCommand.Texture = cache.Get<Graphics.Texture2d>("uv_map_reference.jpg");
+            renderComponent.RenderCommand = new Graphics.RenderCommand(cache)
+            {
+                Shader = compiledShader,
+                Mesh = cache.Get<Graphics.Mesh>("simplecube.DAE"),
+                Texture = cache.Get<Graphics.Texture2d>("uv_map_reference.jpg")
+            };
 
             return entity;
         }

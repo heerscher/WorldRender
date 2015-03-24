@@ -11,6 +11,7 @@ namespace WorldRender.Entities
         private static readonly Type[] ConstructorTypes = new Type[] { typeof(Entity) };
 
         private Dictionary<Type, Components.Component> components;
+        private Components.TransformComponent transformComponent;
         private Graphics.UniqueId<Entity> uniqueId;
 
         public int Id
@@ -23,13 +24,21 @@ namespace WorldRender.Entities
 
         public Entity Parent { get; set; }
 
+        public Components.TransformComponent Transform
+        {
+            get
+            {
+                return transformComponent;
+            }
+        }
+
         public Entity()
         {
             components = new Dictionary<Type, Components.Component>(2);
             uniqueId = new Graphics.UniqueId<Entity>();
 
             // Always add a transform component to the entity
-            AddComponent<Components.TransformComponent>();
+            transformComponent = AddComponent<Components.TransformComponent>();
         }
 
         public T AddComponent<T>() where T : Components.Component
