@@ -73,7 +73,7 @@ namespace WorldRender.Graphics.Materials
 
         public void Dispose()
         {
-            // TODO
+            // Empty, IDisposable is just a requirement of the resource loading system, even if not needed.
         }
     }
 }
