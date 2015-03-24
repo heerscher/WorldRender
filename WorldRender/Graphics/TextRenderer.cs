@@ -160,7 +160,7 @@ namespace WorldRender.Graphics
 
                     // create the text vertex layout and buffer
                     layoutText = new SlimDX.Direct3D11.InputLayout(device.Handle, effect.GetTechniqueByName("Text").GetPassByIndex(0).Description.Signature, inputElements);
-                    var vertexBufferText = new SlimDX.Direct3D11.Buffer(device.Handle, verticesText, (int)verticesText.Length, SlimDX.Direct3D11.ResourceUsage.Default, SlimDX.Direct3D11.BindFlags.VertexBuffer, SlimDX.Direct3D11.CpuAccessFlags.None, SlimDX.Direct3D11.ResourceOptionFlags.None, 0);
+                    vertexBufferText = new SlimDX.Direct3D11.Buffer(device.Handle, verticesText, (int)verticesText.Length, SlimDX.Direct3D11.ResourceUsage.Default, SlimDX.Direct3D11.BindFlags.VertexBuffer, SlimDX.Direct3D11.CpuAccessFlags.None, SlimDX.Direct3D11.ResourceOptionFlags.None, 0);
                     verticesText.Close();
 
                 }

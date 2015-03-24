@@ -7,7 +7,6 @@ namespace WorldRender.Resources.Loaders
     public class MeshLoader : BaseLoader
     {
         private Graphics.Device device;
-        private IEnumerable<Type> supportedTypes;
 
         public MeshLoader(Graphics.Device device)
             : base(new Type[]

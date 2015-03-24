@@ -29,6 +29,48 @@ namespace WorldRender.Graphics.Materials
             this.materialDescriptor = materialDescriptor;
         }
 
+        public Graphics.RasterizerState GetRasterizerState(Resources.Cache cache)
+        {
+#if ASSERT
+            if (cache == null)
+            {
+                throw new ArgumentNullException("cache");
+            }
+#endif
+
+            if (materialDescriptor.Wireframe)
+            {
+                return cache.Get<Graphics.RasterizerState>("back;wireframe");
+            }
+            else
+            {
+                return cache.Get<Graphics.RasterizerState>("default");
+            }
+        }
+
+        public Graphics.Shaders.CompiledShader GetShader(Resources.Cache cache)
+        {
+#if ASSERT
+            if (cache == null)
+            {
+                throw new ArgumentNullException("cache");
+            }
+#endif
+
+            if (string.IsNullOrEmpty(materialDescriptor.ShaderIdentifier))
+            {
+                // TODO: compile dynamic shader based on material flags
+                throw new NotSupportedException("Materials with dynamic shader are not supported yet.");
+            }
+            else
+            {
+                var vertexShader = cache.Get<Graphics.Shaders.VertexShader>(materialDescriptor.ShaderIdentifier);
+                var pixelShader = cache.Get<Graphics.Shaders.PixelShader>(materialDescriptor.ShaderIdentifier);
+
+                return new Shaders.CompiledShader(vertexShader, pixelShader);
+            }
+        }
+
         public void Dispose()
         {
             // TODO
