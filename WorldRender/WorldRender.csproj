@@ -70,6 +70,7 @@
     <Compile Include="Entities\Components\TransformComponent.cs" />
     <Compile Include="Entities\Entity.cs" />
     <Compile Include="Entities\EntityCollection.cs" />
+    <Compile Include="GameInstance.cs" />
     <Compile Include="Graphics\Camera.cs" />
     <Compile Include="Graphics\ConstantBuffer.cs" />
     <Compile Include="Graphics\Device.cs" />
@@ -111,6 +112,8 @@
     <Compile Include="Resources\Loaders\RenderTargetLoader.cs" />
     <Compile Include="Resources\Loaders\TextureLoader.cs" />
     <Compile Include="Resources\Loaders\VertexShaderLoader.cs" />
+    <Compile Include="Scene\Scene.cs" />
+    <Compile Include="TestScene.cs" />
     <Compile Include="Timing\Timer.cs" />
     <Content Include="uv_map_reference.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
