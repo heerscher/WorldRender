@@ -7,7 +7,8 @@ namespace WorldRender.Entities
     /// <summary>
     /// A collection of entities.
     /// </summary>
-    public class EntityCollection
+    [System.Diagnostics.DebuggerNonUserCode]
+    public sealed class EntityCollection
     {
         private const int DefaultCapacity = 1024;
 
@@ -31,6 +32,14 @@ namespace WorldRender.Entities
         }
 
         /// <summary>
+        /// Removes all entities from the collection.
+        /// </summary>
+        public void Clear()
+        {
+            entities.Clear();
+        }
+
+        /// <summary>
         /// Creates a new entity that is part of this collection.
         /// </summary>
         public Entity CreateEntity()
@@ -51,11 +60,12 @@ namespace WorldRender.Entities
         }
 
         /// <summary>
-        /// Gets all components of a specific type from all entities (only if they have it).
+        /// Gets all components of a specific type from all entities.
         /// </summary>
         public IEnumerable<TComponent> GetComponents<TComponent>() where TComponent : Components.Component
         {
-            return entities.Where(e => e.HasComponent<TComponent>()).Select(e => e.GetComponent<TComponent>());
+            return entities.Where(e => e.HasComponent<TComponent>())
+                            .Select(e => e.GetComponent<TComponent>());
         }
     }
 }

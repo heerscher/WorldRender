@@ -5,16 +5,20 @@ using System.Text;
 
 namespace WorldRender
 {
+    /// <summary>
+    /// Represents an instance of a game.
+    /// Brings together different parts of the engine and contains the game's mainloop.
+    /// </summary>
     public class GameInstance : IDisposable
     {
-        
-        private Input.CameraController cameraController;
         private float deltaTime;
         private Graphics.Device device;
         private Timing.Timer frameTime;
         private Input.IState inputState;
-        private Resources.Cache resourceCache;
 
+        /// <summary>
+        /// Gets the device responsible for rendering the game to the screen.
+        /// </summary>
         public Graphics.Device Device
         {
             get
@@ -23,19 +27,14 @@ namespace WorldRender
             }
         }
 
-        public Input.IState InputState
+        /// <summary>
+        /// Gets the state of input devices.
+        /// </summary>
+        public Input.IState Input
         {
             get
             {
                 return inputState;
-            }
-        }
-
-        public Resources.Cache ResourceCache
-        {
-            get
-            {
-                return resourceCache;
             }
         }
 
@@ -46,7 +45,6 @@ namespace WorldRender
             device = new Graphics.Device();
             frameTime = new Timing.Timer();
             inputState = new Input.FormEventHandler(device.Form);
-            resourceCache = device.CreateResourceCache();           
             
             var keyBindingConfigurationFile = new Configuration.ConfigurationFile<Configuration.KeyBindingConfiguration>("keybindings.json");
             var keyBindingConfiguration = keyBindingConfigurationFile.Read();
@@ -82,12 +80,6 @@ namespace WorldRender
 
         public void Dispose()
         {
-            if (resourceCache != null)
-            {
-                resourceCache.Dispose();
-                resourceCache = null;
-            }
-
             if (device != null)
             {
                 device.Dispose();

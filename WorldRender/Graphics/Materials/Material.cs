@@ -29,7 +29,24 @@ namespace WorldRender.Graphics.Materials
             this.materialDescriptor = materialDescriptor;
         }
 
-        public Graphics.RasterizerState GetRasterizerState(Resources.Cache cache)
+        public RenderCommand CreateRenderCommand(Resources.Cache cache)
+        {
+#if ASSERT
+            if (cache == null)
+            {
+                throw new ArgumentNullException("cache");
+            }
+#endif
+
+            return new RenderCommand(cache)
+            {
+                RasterizerState = GetRasterizerState(cache),
+                Shader = GetShader(cache),
+                Texture = cache.Get<Texture2d>("uv_map_reference.jpg")
+            };
+        }
+
+        private RasterizerState GetRasterizerState(Resources.Cache cache)
         {
 #if ASSERT
             if (cache == null)
@@ -48,7 +65,7 @@ namespace WorldRender.Graphics.Materials
             }
         }
 
-        public Graphics.Shaders.CompiledShader GetShader(Resources.Cache cache)
+        private Shaders.CompiledShader GetShader(Resources.Cache cache)
         {
 #if ASSERT
             if (cache == null)
@@ -64,8 +81,8 @@ namespace WorldRender.Graphics.Materials
             }
             else
             {
-                var vertexShader = cache.Get<Graphics.Shaders.VertexShader>(materialDescriptor.ShaderIdentifier);
-                var pixelShader = cache.Get<Graphics.Shaders.PixelShader>(materialDescriptor.ShaderIdentifier);
+                var vertexShader = cache.Get<Shaders.VertexShader>(materialDescriptor.ShaderIdentifier);
+                var pixelShader = cache.Get<Shaders.PixelShader>(materialDescriptor.ShaderIdentifier);
 
                 return new Shaders.CompiledShader(vertexShader, pixelShader);
             }

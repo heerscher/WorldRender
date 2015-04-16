@@ -13,9 +13,6 @@ namespace WorldRender
         [STAThread]
         internal static void Main()
         {
-            Application.EnableVisualStyles();
-            Application.SetCompatibleTextRenderingDefault(false);
-
 #if !DEBUG
             // Hide mouse cursor in RELEASE mode
             Cursor.Hide();
